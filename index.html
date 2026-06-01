@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>有X無Y 成語語料庫</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --keyword-color: #d9534f;
+            --bg-color: #f8f9fa;
+            --border-color: #dee2e6;
+        }
+        body {
+            font-family: "PingFang TC", "Heiti TC", "微軟正黑體", sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        /* 標題與控制區（無圖形 Logo，採用純文字 3D 輕量風格） */
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        select {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+        }
+        /* KWIC 語料庫表格設計 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+        }
+        th, td {
+            padding: 12px 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        th {
+            background-color: var(--primary-color);
+            color: #fff;
+            position: sticky;
+            top: 0;
+        }
+        tr:hover {
+            background-color: #f1f3f5;
+        }
+        /* 對齊設定，重現 CQPweb 檢索風格 */
+        .col-id { width: 5%; text-align: center; }
+        .col-left { width: 35%; text-align: right; }
+        .col-keyword { width: 10%; text-align: center; font-weight: bold; color: var(--keyword-color); }
+        .col-right { width: 35%; text-align: left; }
+        .col-book { width: 10%; text-align: center; font-size: 13px; color: #666; }
+        .col-year { width: 5%; text-align: center; font-size: 13px; color: #666; }
+        
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>「有X無Y」成語檢索系統</h1>
+    
+    <div class="controls">
+        <select id="idiomSelect" onchange="renderTable()">
+            <option value="all">顯示全部成語 (共 6 個)</option>
+            <option value="有恃無恐">有恃無恐</option>
+            <option value="有氣無力">有氣無力</option>
+            <option value="有教無類">有教無類</option>
+            <option value="有眼無珠">有眼無珠</option>
+            <option value="有備無患">有備無患</option>
+            <option value="有意無意">有意無意</option>
+        </select>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="col-id">項次</th>
+                <th class="col-left">左側上下文</th>
+                <th class="col-keyword">檢索詞</th>
+                <th class="col-right">右側上下文</th>
+                <th class="col-book">來源/書名</th>
+                <th class="col-year">年代</th>
+            </tr>
+        </thead>
+        <tbody id="corpusBody">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    // 整理自上傳檔案的原始語料（可隨時擴充此陣列）
+    const rawData = [
+        { idiom: "有恃無恐", left: "偏差的青少年，面臨前所未有的窘境；那些", keyword: "有恃無恐", right: "的孩子，竟然對著教師挑釁：「", book: "活出自己的如來(新版)", year: "2011" },
+        { idiom: "有恃無恐", left: "受罰，父母親又替他開罪，孩子就", keyword: "有恃無恐", right: "，變本加厲，強化他的非行特質。3.", book: "活出自己的如來(新版)", year: "2011" },
+        { idiom: "有氣無力", left: "他連續高燒了三天，整個人顯得", keyword: "有氣無力", right: "的。", book: "網路語料", year: "無" },
+        { idiom: "有氣無力", left: "剛跑完馬拉松，參賽者們紛紛癱坐在地上，", keyword: "有氣無力", right: "地喘著粗氣。", book: "網路語料", year: "無" },
+        { idiom: "有教無類", left: "；沒有預設立場的教師，才能發揮", keyword: "有教無類", right: "的精神。學業成績不好，不應該", book: "教師的大愛", year: "2007" },
+        { idiom: "有教無類", left: "循循善誘；胸懷愛護之心，才能做到", keyword: "有教無類", right: "。教師一旦具備這些特質，自然能提供", book: "教師的大愛", year: "2007" },
+        { idiom: "有眼無珠", left: "位嫁到劇務的小姐，也是屬於「", keyword: "有眼無珠", right: "」之類，蓋在一個純潔的少女", book: "蛇腰集", year: "2000" },
+        { idiom: "有眼無珠", left: "這份罪是上帝的懲罰，那個", keyword: "有眼無珠", right: "的上帝，不要也罷。「還有一", book: "蛇腰集", year: "2000" },
+        { idiom: "有備無患", left: "工作，也許終其一生不會遇到自殺當事人，但", keyword: "有備無患", right: "，多一分準備也是好的。", book: "搶救自殺行動", year: "2003" },
+        { idiom: "有備無患", left: "嚴重的那一天，柏楊夫人為了", keyword: "有備無患", right: "，就翻箱倒櫃，找出了我那一萬元", book: "搶救自殺行動", year: "2003" },
+        { idiom: "有意無意", left: "妯娌是一個集團，常常在她面前", keyword: "有意無意", right: "談自己當年的嫁妝多麼多麼豐盛，小姑子", book: "情感與人生", year: "1993" },
+        { idiom: "有意無意", left: "有時甚至提早到演講對象經常聚集的地方，", keyword: "有意無意", right: "地聽聽他們之間談論的是什麼話題？", book: "情感與人生", year: "1993" },
+        // 這是一筆含有英文的測試資料，將會被程式自動濾除
+        { idiom: "有意無意", left: "這句包含了 English word，", keyword: "有意無意", right: "所以它不會出現在畫面上。", book: "測試語料", year: "2026" }
+    ];
+
+    // 核心處理：過濾掉包含英文字母的句子
+    const corpusData = rawData.filter(item => {
+        const fullSentence = item.left + item.keyword + item.right;
+        // 檢查是否存在大小寫英文字母，若無 (false) 則保留
+        return !/[a-zA-Z]/.test(fullSentence);
+    });
+
+    // 渲染表格內容
+    function renderTable() {
+        const selectedIdiom = document.getElementById("idiomSelect").value;
+        const tbody = document.getElementById("corpusBody");
+        tbody.innerHTML = ""; // 清空現有內容
+
+        // 依據下拉選單進行篩選
+        const filteredData = selectedIdiom === "all" 
+            ? corpusData 
+            : corpusData.filter(item => item.idiom === selectedIdiom);
+
+        if (filteredData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="empty-message">沒有符合條件的語料資料。</td></tr>`;
+            return;
+        }
+
+        // 建立 DOM 元素並加上 CQP KWIC 對齊樣式
+        filteredData.forEach((item, index) => {
+            const tr = document.createElement("tr");
+            
+            tr.innerHTML = `
+                <td class="col-id">${index + 1}</td>
+                <td class="col-left">${item.left}</td>
+                <td class="col-keyword">${item.keyword}</td>
+                <td class="col-right">${item.right}</td>
+                <td class="col-book">${item.book}</td>
+                <td class="col-year">${item.year}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // 初始化載入
+    window.onload = renderTable;
+</script>
+
+</body>
+</html>
