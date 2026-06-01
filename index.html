@@ -29,11 +29,14 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
+        /* 無圖形 Logo，採用純文字 3D 輕量風格 */
         h1 {
             color: var(--primary-color);
             text-align: center;
             margin-bottom: 20px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+            font-size: 28px;
+            letter-spacing: 2px;
         }
         .controls {
             display: flex;
@@ -69,6 +72,7 @@
             color: #fff;
             position: sticky;
             top: 0;
+            z-index: 2;
         }
         tr:hover {
             background-color: #f1f3f5;
@@ -84,6 +88,47 @@
             padding: 40px;
             color: #888;
             font-size: 18px;
+        }
+
+        /* 詞類懸停 Tooltip 設計 */
+        .keyword-container {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .keyword-container .tooltip {
+            visibility: hidden;
+            width: max-content;
+            background-color: #4a5568;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 6px 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            font-size: 12px;
+            font-weight: normal;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+            letter-spacing: 1px;
+        }
+        .keyword-container .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #4a5568 transparent transparent transparent;
+        }
+        .keyword-container:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
@@ -122,6 +167,16 @@
 </div>
 
 <script>
+    // 詞類標記映射表（依據中研院詞庫標準）
+    const posDictionary = {
+        "有恃無恐": "[ VH ] 狀態不及物動詞",
+        "有氣無力": "[ VH ] 狀態不及物動詞",
+        "有教無類": "[ VH ] 狀態不及物動詞",
+        "有眼無珠": "[ VH ] 狀態不及物動詞 / [ Na ] 普通名詞",
+        "有備無患": "[ VH ] 狀態不及物動詞",
+        "有意無意": "[ D ] 副詞 / [ VH ] 狀態不及物動詞"
+    };
+
     // 壓縮格式儲存的語料資料 (左側|關鍵字|右側|書名|年代)
     const compressedData = [
         // ================= 有恃無恐 =================
@@ -430,7 +485,6 @@
         "， 比如 民族 的 救星 、 世界 的 偉人 、|有教無類|等 完美 人格 ， 而 把 人格 上 自私 、|不正常也是一種正常 - 精神疾病的人格整合療法|2015",
 
         // ================= 有眼無珠 =================
-        // 全數 70 筆 (來源中僅有約 71 筆且部分已過濾英文)
         "位 嫁到 劇務 的 小姐 ， 也 是 屬於 「|有眼無珠|」 之類 ， 蓋 在 一 個 純潔 的 少女|蛇腰集|2000",
         "這 份 罪 是 上帝 的 懲罰 ， 那 個|有眼無珠|的 上帝 ， 不要 也罷 。 「 還 有 一|按牌理出牌|2000",
         "不 見 綠 葉 ， 但 聞 奇 香 ，|有眼無珠|， 憾 。 憾 得 不值 。 憾完 丟掉 ，|諸子百家看金庸（肆）|2005",
@@ -708,6 +762,19 @@
         "霸道 ， 就 常常 亮 著 自己 的 官職 ，|有意無意|地 打 著 太子 楊勇 的 旗號 。 旁人 的|曇花王朝|2015",
     ];
 
+    // 清理文字：轉換全形直排引號為標準引號，並清理周圍不自然的空白
+    function cleanText(text) {
+        return text
+            .replace(/﹁/g, "「")
+            .replace(/﹂/g, "」")
+            .replace(/『/g, "『")
+            .replace(/』/g, "』")
+            .replace(/「\s+/g, "「")
+            .replace(/\s+」/g, "」")
+            .replace(/『\s+/g, "『")
+            .replace(/\s+』/g, "』");
+    }
+
     // 初始化渲染
     function renderTable() {
         const selectedIdiom = document.getElementById("idiomSelect").value;
@@ -716,22 +783,30 @@
         tbody.innerHTML = "";
 
         let matchCount = 0;
-        compressedData.forEach((row, index) => {
+        compressedData.forEach((row) => {
             const parts = row.split('|');
             if (parts.length === 5) {
-                const left = parts[0];
+                // 套用引號清理函數
+                const left = cleanText(parts[0]);
                 const keyword = parts[1];
-                const right = parts[2];
+                const right = cleanText(parts[2]);
                 const book = parts[3];
                 const year = parts[4];
 
                 if (selectedIdiom === "all" || keyword === selectedIdiom) {
                     matchCount++;
+                    const posInfo = posDictionary[keyword] || "未知詞類";
+                    
                     const tr = document.createElement("tr");
                     tr.innerHTML = `
                         <td class="col-id">${matchCount}</td>
                         <td class="col-left">${left}</td>
-                        <td class="col-keyword">${keyword}</td>
+                        <td class="col-keyword">
+                            <div class="keyword-container">
+                                ${keyword}
+                                <span class="tooltip">${posInfo}</span>
+                            </div>
+                        </td>
                         <td class="col-right">${right}</td>
                         <td class="col-book">${book}</td>
                         <td class="col-year">${year}</td>
