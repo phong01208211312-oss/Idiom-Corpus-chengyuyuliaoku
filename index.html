@@ -13,6 +13,7 @@
             --panel-bg: #e9ecef;
             --border-color: #ced4da;
             --tab-bg: #e2e6ea;
+            --link-color: #0056b3;
         }
         body {
             font-family: "PingFang TC", "Heiti TC", "微軟正黑體", sans-serif;
@@ -58,13 +59,8 @@
             margin-right: 5px;
             transition: all 0.3s;
         }
-        .tab-btn:hover {
-            background-color: #d1d6dc;
-        }
-        .tab-btn.active {
-            background-color: var(--primary-color);
-            color: #fff;
-        }
+        .tab-btn:hover { background-color: #d1d6dc; }
+        .tab-btn.active { background-color: var(--primary-color); color: #fff; }
 
         /* 內容區塊控制 */
         .view-section { display: none; }
@@ -106,8 +102,8 @@
         }
         .form-row {
             display: flex;
-            align-items: center;
-            margin-bottom: 12px;
+            align-items: flex-start;
+            margin-bottom: 15px;
             font-size: 15px;
         }
         .form-row label {
@@ -116,17 +112,21 @@
             color: #495057;
             text-align: right;
             margin-right: 15px;
+            margin-top: 8px;
         }
         .form-row .input-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .input-group .inline-items {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        .form-note {
-            font-size: 13px;
-            color: #777;
-            margin-left: 10px;
-        }
+        .form-note { font-size: 13px; color: #777; line-height: 1.5; }
+        
         .action-btn {
             background-color: var(--primary-color);
             color: #fff;
@@ -170,54 +170,57 @@
         }
         tr:hover { background-color: #f1f3f5; }
 
-        /* KWIC 表格欄位寬度 */
-        .col-id { width: 5%; text-align: center; color: #888; }
-        .col-left { width: 35%; text-align: right; }
-        .col-keyword { width: 10%; text-align: center; font-weight: bold; color: var(--keyword-color); }
-        .col-right { width: 35%; text-align: left; }
-        .col-book { width: 10%; text-align: center; font-size: 13px; color: #666; }
-        .col-year { width: 5%; text-align: center; font-size: 13px; color: #666; }
-        
-        /* 搭配詞 表格欄位寬度 */
+        /* 搭配詞 表格特殊設定 */
+        .colloc-link {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .colloc-link:hover { text-decoration: underline; color: #003e80; }
+
         .col-rank { width: 10%; text-align: center; }
-        .col-word { width: 45%; text-align: center; font-weight: bold; color: var(--primary-color); }
-        .col-freq { width: 45%; text-align: center; }
+        .col-word { width: 30%; text-align: center; }
+        .col-freq { width: 30%; text-align: center; }
+        .col-ll { width: 30%; text-align: center; }
 
-        .empty-message {
-            text-align: center;
-            padding: 40px;
-            color: #888;
-            font-size: 18px;
+        /* Modal 視窗設計 */
+        .modal {
+            display: none;
+            position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%; overflow: auto;
+            background-color: rgba(0,0,0,0.6);
         }
-
-        /* 詞性標記 Tooltip */
-        .keyword-container {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-            border-bottom: 1px dashed rgba(217, 83, 79, 0.5);
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 8px;
+            width: 85%;
+            max-width: 1000px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: fadeIn 0.3s;
         }
-        .keyword-container .tooltip {
-            visibility: hidden;
-            width: max-content;
-            background-color: #34495e;
-            color: #fff;
-            text-align: center;
-            border-radius: 4px;
-            padding: 6px 10px;
-            position: absolute;
-            z-index: 10;
-            bottom: 130%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.2s;
-            font-size: 12px;
+        @keyframes fadeIn { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
+        .modal-header {
+            padding: 15px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .keyword-container:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
+        .modal-header h3 { margin: 0; font-size: 18px; }
+        .close-btn { color: white; font-size: 24px; cursor: pointer; font-weight: bold; }
+        .close-btn:hover { color: #ddd; }
+        .modal-body { padding: 20px; max-height: 65vh; overflow-y: auto; }
+        
+        .sent-row { padding: 12px 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; }
+        .sent-row:last-child { border-bottom: none; }
+        .sent-left { flex: 1; text-align: right; padding-right: 10px; }
+        .sent-kw { font-weight: bold; color: var(--keyword-color); padding: 0 10px; flex-shrink: 0; }
+        .sent-right { flex: 1; text-align: left; padding-left: 10px; }
+        .highlight-colloc { background-color: #ffe066; padding: 2px 4px; border-radius: 3px; font-weight: bold; color: #d35400; }
     </style>
 </head>
 <body>
@@ -229,7 +232,7 @@
         <label style="font-weight:bold;">目標成語 (Target Node)：</label>
         <select id="idiomSelect" onchange="handleIdiomChange()">
             <option value="有恃無恐">有恃無恐</option>
-            <option value="有氣無力">有氣無力</option>
+            <option value="有氣無力" selected>有氣無力</option>
             <option value="有教無類">有教無類</option>
             <option value="有眼無珠">有眼無珠</option>
             <option value="有備無患">有備無患</option>
@@ -238,18 +241,18 @@
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" id="tab-kwic" onclick="switchView('kwic')">KWIC 語料檢索</button>
-        <button class="tab-btn" id="tab-colloc" onclick="switchView('colloc')">搭配詞統計 (Collocations)</button>
+        <button class="tab-btn" id="tab-kwic" onclick="switchView('kwic')">KWIC 語料檢索</button>
+        <button class="tab-btn active" id="tab-colloc" onclick="switchView('colloc')">搭配詞統計 (Collocations)</button>
     </div>
 
-    <div id="view-kwic" class="view-section active">
+    <div id="view-kwic" class="view-section">
         <div style="text-align:right; margin-bottom: 10px;">
             <span class="stats" id="kwicStatsDisplay"></span>
         </div>
         <table>
             <thead>
                 <tr>
-                    <th class="col-id">項次</th>
+                    <th class="col-id">No.</th>
                     <th class="col-left">左側上下文</th>
                     <th class="col-keyword">檢索詞</th>
                     <th class="col-right">右側上下文</th>
@@ -261,50 +264,56 @@
         </table>
     </div>
 
-    <div id="view-colloc" class="view-section">
-        
+    <div id="view-colloc" class="view-section active">
         <div class="controls-panel">
             <h3>搭配詞運算設定 (Collocation Controls)</h3>
             
             <div class="form-row">
                 <label>Collocation based on:</label>
                 <div class="input-group">
-                    <select disabled><option>Word (詞彙)</option></select>
-                    <span class="form-note">* 目前微型語料庫統一以「詞彙」為計算基準</span>
+                    <div class="inline-items"><select disabled><option>Word (詞彙)</option></select></div>
                 </div>
             </div>
             
             <div class="form-row">
                 <label>Collocation window from:</label>
                 <div class="input-group">
-                    Left 
-                    <select id="leftWindow">
-                        <option value="1">1</option><option value="2">2</option>
-                        <option value="3" selected>3</option><option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                    to Right 
-                    <select id="rightWindow">
-                        <option value="1">1</option><option value="2">2</option>
-                        <option value="3" selected>3</option><option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                    <span class="form-note">* 決定要擷取成語左、右側的多少個詞</span>
+                    <div class="inline-items">
+                        Left 
+                        <select id="leftWindow">
+                            <option value="1">1</option><option value="2">2</option>
+                            <option value="3" selected>3</option><option value="4">4</option><option value="5">5</option>
+                        </select>
+                        to Right 
+                        <select id="rightWindow">
+                            <option value="1">1</option><option value="2">2</option>
+                            <option value="3" selected>3</option><option value="4">4</option><option value="5">5</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
             <div class="form-row">
                 <label>Freq(node, collocate) at least:</label>
                 <div class="input-group">
-                    <input type="number" id="minFreq" value="2" min="1" max="50" style="width: 70px;">
-                    <span class="form-note">* 共同出現的最少次數，過濾掉偶然出現的雜訊</span>
+                    <div class="inline-items">
+                        <input type="number" id="minFreq" value="2" min="1" max="50" style="width: 70px;">
+                    </div>
                 </div>
             </div>
 
             <div class="form-row">
                 <label>Extra information:</label>
                 <div class="input-group">
-                    <select disabled><option>None</option></select>
+                    <div class="inline-items">
+                        <select id="extraInfo" disabled>
+                            <option value="ll">Log-likelihood (LL)</option>
+                        </select>
+                    </div>
+                    <div class="form-note" style="margin-top: 8px;">
+                        <strong>Log-likelihood (LL)</strong> scores collocations by significance: the higher the score, the more evidence you have that the association is not due to chance. More frequent words tend to get higher log-likelihood scores, because there is more evidence for such words.<br><br>
+                        <span style="color:#555;">（中文簡介：對數概似率 (LL) 依據顯著性對搭配詞進行評分：分數越高，表示該關聯性越不可能是出於偶然。在語料庫中越常共同出現的詞彙，通常會獲得較高的 LL 分數。）</span>
+                    </div>
                 </div>
             </div>
 
@@ -316,9 +325,10 @@
         <table>
             <thead>
                 <tr>
-                    <th class="col-rank">排名 (Rank)</th>
-                    <th class="col-word">搭配詞 (Collocate)</th>
-                    <th class="col-freq">共同出現次數 (Frequency)</th>
+                    <th class="col-rank">No.</th>
+                    <th class="col-word">搭配詞 (Word)</th>
+                    <th class="col-freq">共同出現次數 (Observed collocate freq)</th>
+                    <th class="col-ll">顯著性 (Log-likelihood)</th>
                 </tr>
             </thead>
             <tbody id="collocBody"></tbody>
@@ -327,18 +337,25 @@
 
 </div>
 
+<div id="sentenceModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">搭配詞例句</h3>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body" id="modalList"></div>
+    </div>
+</div>
+
 <script>
-    // 中研院詞庫 POS 中文對照表
     const posDescriptions = {
         "VH": "[ VH ] 狀態不及物動詞", "VK": "[ VK ] 狀態及物動詞",
         "VJ": "[ VJ ] 狀態及物動詞", "Na": "[ Na ] 普通名詞",
         "D": "[ D ] 副詞", "A": "[ A ] 非謂形容詞", "Nb": "[ Nb ] 專有名詞"
     };
 
-    // 需要被過濾的標點符號，避免計入搭配詞
     const stopPunctuations = ['，','。','、','；','：','「','」','『','』','！','？','（','）','(',')','[',']','—','...','…','~','～','《','》','〈','〉','?','!'];
 
-    // 格式：左側 | 關鍵字 | 右側 | 書名 | 年代 | 精確詞性(POS)
     const compressedData = [
         // ================= 有恃無恐 =================
         "偏差 的 青少年 ， 面臨 前所未有 的 窘境 ； 那些|有恃無恐|的 孩子 ， 竟然 對 著 教師 挑釁 ： 「|活出自己的如來(新版)|2011|VH",
@@ -443,87 +460,52 @@
         "， 苻 堅 應該 不會 判 他 罪 ， 因而|有恃無恐|地 說 ： ﹁ 王 猛 ， 放 我 出去|打草驚蛇|2012|VH",
         
         // ================= 有氣無力 =================
-        "他連續高燒了三天，整個人顯得|有氣無力|的。|網路語料|無|VH",
-        "剛跑完馬拉松，參賽者們紛紛癱坐在地上，|有氣無力|地喘著粗氣。|網路語料|無|D",
-        "手術過後，病人躺在病床上，|有氣無力|地向家屬點了點頭。|網路語料|無|D",
-        "餓了整整一天，他現在連走路都|有氣無力|。|網路語料|無|VH",
-        "經過三天三夜的徹夜加班，他現在說話都|有氣無力|的。|網路語料|無|VH",
-        "中暑之後，她感到頭暈目眩，全身|有氣無力|。|網路語料|無|VH",
-        "老爺爺拄著拐杖，|有氣無力|地走在公園的小徑上。|網路語料|無|D",
-        "嚴重的感冒讓他這幾天都|有氣無力|，只能躺在床上休息。|網路語料|無|VH",
-        "剛爬完這座高山，大家的雙腿都發軟，說話也|有氣無力|。|網路語料|無|VH",
-        "經歷了一場大病，他看起來面色蒼白，|有氣無力|。|網路語料|無|VH",
-        "搬了整整一個上午的重物，工人們個個|有氣無力|地坐在樹下休息。|網路語料|無|D",
-        "腸胃炎讓他上吐下瀉，整個人虛脫得|有氣無力|。|網路語料|無|VH",
-        "她從急診室走出來時，步伐沉重且|有氣無力|。|網路語料|無|VH",
-        "沒吃早餐的結果，就是體育課跑大隊接力時|有氣無力|。|網路語料|無|VH",
-        "熬夜看球賽讓他今天一整天都處於|有氣無力|的狀態。|網路語料|無|VH",
-        "雖然吃過藥了，但他依然覺得全身痠痛、|有氣無力|。|網路語料|無|VH",
-        "被暴雨淋了一身後，他|有氣無力|地推開了家門。|網路語料|無|D",
-        "長途飛行加上嚴重的時差，讓她一到飯店就|有氣無力|地倒在床上。|網路語料|無|D",
-        "劇烈的牙痛折磨了他一整晚，早上起來時他已經|有氣無力|了。|網路語料|無|VH",
-        "產婦在經歷了漫長的分娩過程後，|有氣無力|地看著剛出生的嬰兒。|網路語料|無|D",
-        "聽到落榜的消息，他整天都|有氣無力|的，什麼事也不想做。|網路語料|無|VH",
-        "由於提案再度被老闆退回，整個團隊的氣氛顯得|有氣無力|。|網路語料|無|VH",
-        "面對無休止的家庭爭吵，她只能|有氣無力|地嘆了一口氣。|網路語料|無|D",
-        "失戀後，他像洩了氣的皮球，整個月都|有氣無力|的。|網路語料|無|VH",
-        "看著滿桌不及格的考卷，老師|有氣無力|地搖了搖頭。|網路語料|無|D",
-        "被朋友誤解讓他感到非常委屈，連解釋都顯得|有氣無力|。|網路語料|無|VH",
-        "股市大跌，營業大廳裡的投資客個個垂頭喪氣、|有氣無力|。|網路語料|無|VH",
-        "努力了這麼久卻沒有得到回報，他的眼神變得|有氣無力|。|網路語料|無|VH",
-        "面對客戶的無理取鬧，客服人員只能|有氣無力|地繼續賠罪。|網路語料|無|D",
-        "辛苦籌備的活動因為颱風被迫取消，大家都|有氣無力|地收拾會場。|網路語料|無|D",
-        "聽到自己最喜歡的球隊慘敗，他|有氣無力|地關掉了電視。|網路語料|無|D",
-        "發現錢包被偷後，她|有氣無力|地走到警察局報案。|網路語料|無|D",
-        "每次談到未來的發展，他總是表現出一副|有氣無力|的模樣。|網路語料|無|VH",
-        "被上司當眾訓斥後，他回到座位上，|有氣無力|地盯著螢幕。|網路語料|無|D",
-        "知道真相後，他心中的怒火瞬間熄滅，只剩下|有氣無力|的悲哀。|網路語料|無|VH",
-        "計畫趕不上變化，他|有氣無力|地接受了這個殘酷的事實。|網路語料|無|D",
-        "看著漸行漸遠的背影，她|有氣無力|地揮了揮手。|網路語料|無|D",
-        "長期的壓力讓他對任何事物都提不起勁，總是|有氣無力|的。|網路語料|無|VH",
-        "被生活重擔壓得喘不過氣，他的笑容也變得|有氣無力|。|網路語料|無|VH",
-        "理想與現實的巨大落差，讓這些年輕人的抗議聲漸漸|有氣無力|。|網路語料|無|VH",
-        "星期一的早晨，辦公室裡的同事們敲擊鍵盤的聲音都顯得|有氣無力|。|網路語料|無|VH",
-        "炎熱的夏日午後，學生們在課堂上聽講時總是|有氣無力|的。|網路語料|無|VH",
-        "會議已經進行了三個小時，大家的發言越來越|有氣無力|。|網路語料|無|VH",
-        "面對這堆積如山的文件，他|有氣無力|地拿起了筆。|網路語料|無|D",
-        "數學課實在太枯燥了，後排的學生回答問題時都|有氣無力|。|網路語料|無|VH",
-        "每天通勤兩個小時，讓他回到家時總是|有氣無力|。|網路語料|無|VH",
-        "連續上了八堂課，老師講課的聲音也逐漸變得|有氣無力|。|網路語料|無|VH",
-        "週末還得被叫回公司加班，他敲門的手勢都顯得|有氣無力|。|網路語料|無|VH",
-        "看著黑板上密密麻麻的公式，我|有氣無力|地翻開了課本。|網路語料|無|D",
-        "面試到了最後一關，求職者們都已經疲憊不堪，回答問題|有氣無力|。|網路語料|無|VH",
-        "鬧鐘響了第五次，他才|有氣無力|地從被窩裡爬起來。|網路語料|無|D",
-        "排隊等了三個小時才買到限量商品，大家提著袋子的樣子都|有氣無力|。|網路語料|無|VH",
-        "大掃除進行到一半，弟弟已經|有氣無力|地趴在沙發上了。|網路語料|無|D",
-        "面對一成不變的例行公事，員工們處理起來總是|有氣無力|。|網路語料|無|VH",
-        "剛結束一場激烈的辯論，雙方辯友回到座位時都顯得|有氣無力|。|網路語料|無|VH",
-        "晚餐只吃了一片吐司，他寫作業時連拿筆都|有氣無力|。|網路語料|無|VH",
-        "期末考週的圖書館裡，到處都是|有氣無力|、熬夜苦讀的學生。|網路語料|無|VH",
-        "經歷了一整天的折騰，他現在只想|有氣無力|地洗個熱水澡。|網路語料|無|D",
-        "會議室裡的冷氣壞了，大家都|有氣無力|地搧著風。|網路語料|無|D",
-        "面對主管冗長無聊的演講，底下的掌聲也是稀稀落落、|有氣無力|。|網路語料|無|VH",
-        "「我真的吃不下了，」她|有氣無力|地拒絕了飯後的甜點。|網路語料|無|D",
-        "「隨便你吧，」他|有氣無力|地說完這句話後便轉身離開。|網路語料|無|D",
-        "他|有氣無力|地靠在牆上，一句話也不想多說。|網路語料|無|D",
-        "聽見門鈴聲，她|有氣無力|地喊了一聲：「請進。」|網路語料|無|D",
-        "罪犯在審訊室裡低著頭，|有氣無力|地承認了所有的罪行。|網路語料|無|D",
-        "「對不起，是我弄壞的，」弟弟|有氣無力|地低聲道歉。|網路語料|無|D",
-        "受到驚嚇後，她|有氣無力|地癱在椅子上發抖。|網路語料|無|D",
-        "「救命啊……」遠處傳來一陣|有氣無力|的呼喊聲。|網路語料|無|VH",
-        "他睜開惺忪的雙眼，|有氣無力|地問了一句：「現在幾點了？」|網路語料|無|D",
-        "面對記者的追問，他只能|有氣無力|地擺擺手表示拒絕採訪。|網路語料|無|D",
-        "「這件事就到此為止吧，」老闆|有氣無力|地做出了最後的裁決。|網路語料|無|D",
-        "孩子|有氣無力|地拉著媽媽的衣角，吵著想要回家。|網路語料|無|D",
-        "躺在擔架上的傷者，|有氣無力|地呻吟著。|網路語料|無|D",
-        "「好啦，我會去做的，」他雖然答應了，但語氣卻|有氣無力|。|網路語料|無|VH",
-        "隊長|有氣無力|地舉起手勢，示意全隊停止前進。|網路語料|無|D",
-        "她|有氣無力|地撥通了電話，聲音聽起來十分沙啞。|網路語料|無|D",
-        "被戳穿謊言後，他的反駁顯得十分蒼白且|有氣無力|。|網路語料|無|VH",
-        "「真倒楣……」他看著漏氣的輪胎，|有氣無力|地抱怨著。|網路語料|無|D",
-        "老人|有氣無力|地撫摸著舊照片，眼中滿是思念。|網路語料|無|D",
-        "他試著擠出一絲笑容，但那笑容看起來卻非常|有氣無力|。|網路語料|無|VH",
-        "酷暑之下，連樹上的蟬鳴聽起來都顯得有些|有氣無力|。|網路語料|無|VH",
+        "清晨 他 推開 家門 ， 看 著 院子 裡 被 連根拔起 的 老 榕樹 和 滿地 的 碎 玻璃 ，|有氣無力|地 拿起 了 掃把 開始 清理 殘局 。|網路語料|2026|D",
+        "已經 連續 打 了 幾十 通 電話 ， 卻 依然 買 不 到 返鄉 過年 的 火車票 ， 遊子 看 著 螢幕 上 顯示 「 已 售完 」 的 字樣 ，|有氣無力|地 嘆 了 一 口 長 氣 。|網路語料|2026|D",
+        "養 了 十 年 的 黃金獵犬 最近 因為 器官 衰竭 而 無法 進食 ， 牠 趴 在 自己 最 喜歡 的 毯子 上 ， 面對 主人 遞 過來 的 肉條 ， 只能|有氣無力|地 舔 了 兩 下 。|網路語料|2026|D",
+        "在 擁擠 的 尖峰 時刻 捷運 車廂 內 ， 所有 人 都 被 擠 得 動彈不得 ， 每 個 人 臉 上 的 表情 都 十分 麻木 ， 隨著 列車 的 搖晃|有氣無力|地 拉 著 吊環 。|網路語料|2026|D",
+        "他 連續 高燒 了 三 天 ， 整 個 人 顯得|有氣無力|的 。|網路語料|2026|VH",
+        "剛 跑 完 馬拉松 ， 參賽者 們 紛紛 癱 坐 在 地 上 ，|有氣無力|地 喘 著 粗氣 。|網路語料|2026|D",
+        "手術 過後 ， 病人 躺 在 病床 上 ，|有氣無力|地 向 家屬 點 了 點頭 。|網路語料|2026|D",
+        "餓 了 整整 一 天 ， 他 現在 連 走路 都|有氣無力|。|網路語料|2026|VH",
+        "經過 三 天 三 夜 的 徹夜 加班 ， 他 現在 說話 都|有氣無力|的 。|網路語料|2026|VH",
+        "中暑 之後 ， 她 感到 頭暈目眩 ， 全 身|有氣無力|。|網路語料|2026|VH",
+        "老爺爺 拄 著 拐杖 ，|有氣無力|地 走 在 公園 的 小徑 上 。|網路語料|2026|D",
+        "嚴重 的 感冒 讓 他 這 幾 天 都|有氣無力|， 只能 躺 在 床 上 休息 。|網路語料|2026|VH",
+        "剛 爬 完 這 座 高山 ， 大家 的 雙腿 都 發軟 ， 說話 也|有氣無力|。|網路語料|2026|VH",
+        "經歷 了 一 場 大 病 ， 他 看起來 面色 蒼白 ，|有氣無力|。|網路語料|2026|VH",
+        "滿懷 期待 地 買 了 昂貴 的 食材 準備 大展 廚藝 ， 結果 卻 把 整 鍋 湯 給 燒焦 了 ， 他 看 著 焦黑 的 鍋底 ，|有氣無力|地 收拾 著 廚房 。|網路語料|2026|D",
+        "連續 遭受 多 次 的 投資 失敗 ， 他 已經 對 未來 失去 信心 ， 每天 只是|有氣無力|地 處理 著 瑣碎 的 雜事 。|網路語料|2026|D",
+        "剛 結束 一 場 激烈 的 辯論 比賽 ， 雙方 辯友 回到 座位 時 都 顯得|有氣無力|。|網路語料|2026|VH",
+        "面對 老闆 冗長 又 無聊 的 演講 ， 底下 的 員工 們 只能|有氣無力|地 鼓掌 附和 。|網路語料|2026|D",
+        "天氣 實在 太 炎熱 了 ， 連 樹 上 的 蟬鳴 聽起來 都 顯得 有些|有氣無力|。|網路語料|2026|VH",
+        "被 困 在 廢墟 下 已經 兩 天 兩 夜 ， 他 只能|有氣無力|地 發出 微弱 的 求救聲 。|網路語料|2026|D",
+        "長途 跋涉 讓 馬匹 疲憊 不堪 ， 只能|有氣無力|地 嚼 著 馬槽 裡 的 乾草 。|網路語料|2026|D",
+        "看 著 滿 桌 不及格 的 考卷 ， 老師|有氣無力|地 搖 了 搖頭 。|網路語料|2026|D",
+        "他 試 著 擠出 一 絲 笑容 ， 但 那 笑容 看起來 卻 非常|有氣無力|。|網路語料|2026|VH",
+        "被 戳穿 謊言 後 ， 他 的 反駁 顯得 十分 蒼白 且|有氣無力|。|網路語料|2026|VH",
+        "罪犯 在 審訊室 裡 低 著 頭 ，|有氣無力|地 承認 了 所有 的 罪行 。|網路語料|2026|D",
+        "搬 了 整整 一 個 上午 的 重物 ， 工人 們 個個|有氣無力|地 坐在 樹 下 休息 。|網路語料|2026|D",
+        "腸胃炎 讓 他 上吐下瀉 ， 整 個 人 虛脫 得|有氣無力|。|網路語料|2026|VH",
+        "她 從 急診室 走 出來 時 ， 步伐 沉重 且|有氣無力|。|網路語料|2026|VH",
+        "沒 吃 早餐 的 結果 ， 就是 體育課 跑 大隊 接力 時|有氣無力|。|網路語料|2026|VH",
+        "熬夜 看 球賽 讓 他 今天 一 整 天 都 處於|有氣無力|的 狀態 。|網路語料|2026|VH",
+        "雖然 吃 過 藥 了 ， 但 他 依然 覺得 全身 痠痛 、|有氣無力|。|網路語料|2026|VH",
+        "被 暴雨 淋 了 一 身 後 ， 他|有氣無力|地 推開 了 家門 。|網路語料|2026|D",
+        "長途 飛行 加上 嚴重 的 時差 ， 讓 她 一 到 飯店 就|有氣無力|地 倒 在 床 上 。|網路語料|2026|D",
+        "劇烈 的 牙痛 折磨 了 他 一 整 晚 ， 早上 起來 時 他 已經|有氣無力|了 。|網路語料|2026|VH",
+        "產婦 在 經歷 了 漫長 的 分娩 過程 後 ，|有氣無力|地 看 著 剛 出生 的 嬰兒 。|網路語料|2026|D",
+        "聽到 落榜 的 消息 ， 他 整 天 都|有氣無力|的 ， 什麼 事 也 不 想 做 。|網路語料|2026|VH",
+        "由於 提案 再度 被 老闆 退回 ， 整 個 團隊 的 氣氛 顯得|有氣無力|。|網路語料|2026|VH",
+        "面對 無休止 的 家庭 爭吵 ， 她 只能|有氣無力|地 嘆 了 一 口 氣 。|網路語料|2026|D",
+        "失戀 後 ， 他 像 洩 了 氣 的 皮球 ， 整 個 月 都|有氣無力|的 。|網路語料|2026|VH",
+        "被 朋友 誤解 讓 他 感到 非常 委屈 ， 連 解釋 都 顯得|有氣無力|。|網路語料|2026|VH",
+        "股市 大 跌 ， 營業 大廳 裡 的 投資客 個個 垂頭喪氣 、|有氣無力|。|網路語料|2026|VH",
+        "努力 了 這麼 久 卻 沒有 得到 回報 ， 他 的 眼神 變 得|有氣無力|。|網路語料|2026|VH",
+        "面對 客戶 的 無理取鬧 ， 客服 人員 只能|有氣無力|地 繼續 賠罪 。|網路語料|2026|D",
+        "辛苦 籌備 的 活動 因為 颱風 被迫 取消 ， 大家 都|有氣無力|地 收拾 會場 。|網路語料|2026|D",
+        "發現 錢包 被 偷 後 ， 她|有氣無力|地 走 到 警察局 報案 。|網路語料|2026|D",
+        "知道 真相 後 ， 他 心 中 的 怒火 瞬間 熄滅 ， 只 剩下|有氣無力|的 悲哀 。|網路語料|2026|VH",
 
         // ================= 有教無類 =================
         "； 沒有 預設 立場 的 教師 ， 才 能 發揮|有教無類|的 精神 。 學業 成績 不 好 ， 不 應該|教師的大愛|2007|VH",
@@ -745,7 +727,7 @@
         "瞪眼 。 「 不要 生氣 ， 我 只 不過 是|有備無患|， 你 什麼 都 不要 問 ， 到時 看 我|大清傻格格 - 【百年大院主題書】|2016|VH",
         "紊亂 。 有眼無珠 比喻人 膚淺 、 毫無 辨識 能力 。|有備無患|凡事 先 準備好 ， 才 可 免除 後患 。 有期徒刑|遠流活用國語辭典|2016|VH",
         "發育 。 農民 養雞 較多 是 平時 就 飼養 ，|有備無患|， 到 需要 屠宰 或 賣錢 時 ， 就 有|追憶失落的臺灣農業與農家生活：近代臺灣農業史|2015|VH",
-        "精進 自己 的 科學 知識 ， 好 讓 自己 「|有備無患|」 ， 避免 「 學到 用 時 方 恨 少|瘋狂科學俱樂部3：炸彈大開花|2015|VH",
+        "精精 自己 的 科學 知識 ， 好 讓 自己 「|有備無患|」 ， 避免 「 學到 用 時 方 恨 少|瘋狂科學俱樂部3：炸彈大開花|2015|VH",
         "並 濟 ， 軟硬兼施 ， 缺 一 不 可 ，|有備無患|。 曾幾何時 ， 一 提到 「 軟硬兼施 」 ， 人們|絕處逢生，逆境奇蹟|2016|VH",
         "而 長大 後 的 你 ， 是否 會 抱持 「|有備無患|」 的 原則 呢 ？ 或 寧願 為 省事 ，|人生每件事，都是取捨的練習|2016|Na",
         "下 角色 轉換 會 自發 進行 ， 但 為 了|有備無患|， 我們 還是 要 多加 注意 。 角色 衝突 會|走進愛情廚房：保證你會愛死我|2014|VH",
@@ -849,7 +831,26 @@
         "霸道 ， 就 常常 亮 著 自己 的 官職 ，|有意無意|地 打 著 太子 楊勇 的 旗號 。 旁人 的|曇花王朝|2015|D"
     ];
 
-    // 清理文字格式
+    let currentMode = 'kwic';
+    let globalWordFreq = {}; 
+    let totalCorpusWords = 0;
+    let currentCollocResults = [];
+
+    // 初始化：運算整個微型語料庫的總字數與詞頻 (給 Log-likelihood 統計用)
+    function initCorpusStats() {
+        compressedData.forEach(row => {
+            const parts = row.split('|');
+            if (parts.length === 6) {
+                const words = [...getCleanWordsArray(parts[0]), parts[1], ...getCleanWordsArray(parts[2])];
+                totalCorpusWords += words.length;
+                words.forEach(w => {
+                    globalWordFreq[w] = (globalWordFreq[w] || 0) + 1;
+                });
+            }
+        });
+    }
+
+    // 清理引號空白與轉換全形
     function cleanText(text) {
         return text.replace(/﹁/g, "「").replace(/﹂/g, "」")
                    .replace(/『/g, "『").replace(/』/g, "』")
@@ -857,7 +858,7 @@
                    .replace(/『\s+/g, "『").replace(/\s+』/g, "』");
     }
 
-    // 取得乾淨的單詞陣列 (過濾標點與空白)
+    // 將字串拆分並過濾標點符號
     function getCleanWordsArray(text) {
         return text.split(/\s+/).filter(w => {
             const cleanWord = w.replace(/[。，、；：「」『』（）？！《》〈〉]/g, '').trim();
@@ -865,9 +866,6 @@
         });
     }
 
-    let currentMode = 'kwic';
-
-    // 視圖切換
     function switchView(mode) {
         currentMode = mode;
         document.getElementById('view-kwic').classList.remove('active');
@@ -881,16 +879,15 @@
         if(mode === 'kwic') {
             renderKwicTable();
         } else {
-            document.getElementById("collocBody").innerHTML = `<tr><td colspan="3" class="empty-message">請點擊「計算排名」來生成搭配詞統計</td></tr>`;
+            document.getElementById("collocBody").innerHTML = `<tr><td colspan="4" class="empty-message">請點擊「計算排名」來生成搭配詞統計。</td></tr>`;
         }
     }
 
     function handleIdiomChange() {
         if(currentMode === 'kwic') renderKwicTable();
-        else document.getElementById("collocBody").innerHTML = `<tr><td colspan="3" class="empty-message">已更改成語，請重新點擊「計算排名」</td></tr>`;
+        else document.getElementById("collocBody").innerHTML = `<tr><td colspan="4" class="empty-message">已更改成語，請重新點擊「計算排名」。</td></tr>`;
     }
 
-    // 渲染 KWIC 檢索表格
     function renderKwicTable() {
         const selectedIdiom = document.getElementById("idiomSelect").value;
         const tbody = document.getElementById("corpusBody");
@@ -935,49 +932,81 @@
         }
     }
 
-    // 核心演算法：計算搭配詞
     function calculateCollocation() {
         const selectedIdiom = document.getElementById("idiomSelect").value;
         const leftWin = parseInt(document.getElementById("leftWindow").value);
         const rightWin = parseInt(document.getElementById("rightWindow").value);
         const minFreq = parseInt(document.getElementById("minFreq").value);
         
-        let wordCounts = {};
+        let windowWordCounts = {}; 
+        let sentencesWithCollocate = {}; 
+        let nodeFreq = 0;
 
-        // 掃描符合的語料庫句子
         compressedData.forEach(row => {
             const parts = row.split('|');
             if (parts.length === 6 && parts[1] === selectedIdiom) {
+                nodeFreq++;
                 const leftWords = getCleanWordsArray(parts[0]);
                 const rightWords = getCleanWordsArray(parts[2]);
 
-                // 擷取 Window 範圍內的字詞
                 const targetLeft = leftWin > 0 ? leftWords.slice(-leftWin) : [];
                 const targetRight = rightWin > 0 ? rightWords.slice(0, rightWin) : [];
 
                 const collocates = [...targetLeft, ...targetRight];
+                
                 collocates.forEach(word => {
-                    wordCounts[word] = (wordCounts[word] || 0) + 1;
+                    windowWordCounts[word] = (windowWordCounts[word] || 0) + 1;
+                    if(!sentencesWithCollocate[word]) sentencesWithCollocate[word] = [];
+                    sentencesWithCollocate[word].push(row);
                 });
             }
         });
 
-        // 過濾並排序
-        let sortedResults = Object.keys(wordCounts)
-            .map(word => ({ word: word, freq: wordCounts[word] }))
-            .filter(item => item.freq >= minFreq)
-            .sort((a, b) => b.freq - a.freq); // Descending order
+        let results = [];
+        for (const word in windowWordCounts) {
+            const O11 = windowWordCounts[word]; // 共同出現次數
+            if (O11 >= minFreq) {
+                const C_colloc = globalWordFreq[word] || O11; // 該搭配詞在整體語料庫的總頻率
+                const C_node = nodeFreq; // 該成語的總頻率
+                const N = totalCorpusWords;
 
-        renderCollocTable(sortedResults);
+                // Log-likelihood 計算公式
+                const O12 = C_node - O11;
+                const O21 = C_colloc - O11;
+                const O22 = N - C_node - C_colloc + O11;
+
+                const E11 = (C_node * C_colloc) / N;
+                const E12 = (C_node * (N - C_colloc)) / N;
+                const E21 = ((N - C_node) * C_colloc) / N;
+                const E22 = ((N - C_node) * (N - C_colloc)) / N;
+
+                let LL = 0;
+                if (O11 > 0 && E11 > 0) LL += O11 * Math.log(O11 / E11);
+                if (O12 > 0 && E12 > 0) LL += O12 * Math.log(O12 / E12);
+                if (O21 > 0 && E21 > 0) LL += O21 * Math.log(O21 / E21);
+                if (O22 > 0 && E22 > 0) LL += O22 * Math.log(O22 / E22);
+                LL = 2 * LL;
+
+                results.push({
+                    word: word,
+                    obsFreq: O11,
+                    ll: LL.toFixed(2),
+                    sentences: sentencesWithCollocate[word]
+                });
+            }
+        }
+
+        // 根據 Log-likelihood 分數降冪排序
+        currentCollocResults = results.sort((a, b) => b.ll - a.ll); 
+        renderCollocTable(currentCollocResults);
     }
 
-    // 渲染搭配詞表格
     function renderCollocTable(results) {
         const tbody = document.getElementById("collocBody");
         tbody.innerHTML = "";
 
         if (results.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="3" class="empty-message">在目前設定下，找不到頻率達標的搭配詞。<br>建議降低 "Freq at least" 數值，或擴大 Collocation window。</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" class="empty-message">在目前設定下，找不到頻率達標的搭配詞。<br>建議降低 "Freq at least" 數值，或擴大 Collocation window。</td></tr>`;
             return;
         }
 
@@ -985,15 +1014,56 @@
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td class="col-rank">${index + 1}</td>
-                <td class="col-word">${item.word}</td>
-                <td class="col-freq">${item.freq}</td>
+                <td class="col-word"><a href="javascript:void(0)" class="colloc-link" onclick="openModal(${index})">${item.word}</a></td>
+                <td class="col-freq">${item.obsFreq}</td>
+                <td class="col-ll">${item.ll}</td>
             `;
             tbody.appendChild(tr);
         });
     }
 
+    // Modal 邏輯
+    function openModal(index) {
+        const item = currentCollocResults[index];
+        document.getElementById('modalTitle').innerText = `搭配詞「${item.word}」共現例句 (${item.obsFreq} 筆)`;
+        const list = document.getElementById('modalList');
+        list.innerHTML = '';
+        
+        item.sentences.forEach(row => {
+            const parts = row.split('|');
+            let left = cleanText(parts[0]);
+            let right = cleanText(parts[2]);
+            const kw = parts[1];
+
+            // 將搭配詞加上黃底紅字的高亮標示
+            const regex = new RegExp(`(${item.word})`, 'g');
+            const highlightHtml = `<span class="highlight-colloc">$1</span>`;
+            left = left.replace(regex, highlightHtml);
+            right = right.replace(regex, highlightHtml);
+
+            list.innerHTML += `
+                <div class="sent-row">
+                    <div class="sent-left">${left}</div>
+                    <div class="sent-kw">${kw}</div>
+                    <div class="sent-right">${right}</div>
+                </div>
+            `;
+        });
+        document.getElementById('sentenceModal').style.display = 'block';
+    }
+
+    function closeModal() { document.getElementById('sentenceModal').style.display = 'none'; }
+
+    // 點擊 Modal 背景時關閉視窗
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('sentenceModal')) closeModal();
+    }
+
     // 初始載入
-    window.onload = () => switchView('kwic');
+    window.onload = () => {
+        initCorpusStats(); // 載入時先統計語料庫全域狀態
+        switchView('colloc'); // 預設展示搭配詞畫面
+    };
 </script>
 
 </body>
