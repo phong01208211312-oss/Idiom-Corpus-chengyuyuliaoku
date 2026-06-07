@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>「有X無Y」成語語料庫與搭配詞系統</title>
+    <title>「有X無Y」成語檢索與學習系統</title>
     <style>
         :root {
             --primary-color: #2b3a42;
-            --secondary-color: #3f5765;
+            --secondary-color: #465c69;
             --keyword-color: #d9534f;
             --bg-color: #f4f6f8;
-            --panel-bg: #e9ecef;
+            --panel-bg: #eef1f4;
             --border-color: #ced4da;
-            --tab-bg: #e2e6ea;
+            --tab-bg: #dbe0e5;
             --link-color: #0056b3;
         }
         body {
@@ -29,7 +29,7 @@
             width: 100%;
             max-width: 1250px;
             background: #fff;
-            padding: 30px;
+            padding: 25px 35px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
@@ -41,111 +41,55 @@
             letter-spacing: 1px;
         }
 
-        /* 頁籤設計 */
-        .tabs {
-            display: flex;
-            border-bottom: 2px solid var(--primary-color);
-            margin-bottom: 25px;
-        }
-        .tab-btn {
-            background-color: var(--tab-bg);
-            border: none;
-            padding: 12px 25px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #555;
-            border-radius: 6px 6px 0 0;
-            margin-right: 5px;
-            transition: all 0.3s;
-        }
-        .tab-btn:hover { background-color: #d1d6dc; }
-        .tab-btn.active { background-color: var(--primary-color); color: #fff; }
-
-        /* 內容區塊控制 */
-        .view-section { display: none; }
-        .view-section.active { display: block; }
-
-        /* 通用選擇器與面板 */
+        /* 主控制區 */
         .global-controls {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         select, input[type="number"] {
-            padding: 8px 12px;
+            padding: 6px 12px;
             font-size: 15px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             outline: none;
             background-color: #fff;
         }
-        
-        /* 搭配詞控制面板 (COCT 風格) */
-        .controls-panel {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .controls-panel h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: var(--secondary-color);
-            font-size: 18px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 8px;
-        }
-        .form-row {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            font-size: 15px;
-        }
-        .form-row label {
-            width: 250px;
-            font-weight: bold;
-            color: #495057;
-            text-align: right;
-            margin-right: 15px;
-            margin-top: 8px;
-        }
-        .form-row .input-group {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .input-group .inline-items {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .form-note { font-size: 13px; color: #777; line-height: 1.5; }
-        
-        .action-btn {
-            background-color: var(--primary-color);
-            color: #fff;
-            border: none;
-            padding: 10px 30px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .action-btn:hover { background-color: #1a252a; }
 
-        /* 統計狀態 */
-        .stats {
+        /* 頁籤設計 */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            background-color: var(--tab-bg);
+            border: none;
+            padding: 10px 25px;
             font-size: 15px;
-            color: #666;
-            background: var(--panel-bg);
-            padding: 8px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #555;
+            border-radius: 6px 6px 0 0;
+            margin-right: 5px;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover { background-color: #cdd3d8; }
+        .tab-btn.active { background-color: var(--primary-color); color: #fff; }
+
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        /* 統計狀態條 */
+        .stats-bar {
+            background-color: #e9ecef;
+            padding: 10px 15px;
+            text-align: right;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
             border-radius: 4px;
         }
 
@@ -157,9 +101,9 @@
             table-layout: fixed;
         }
         th, td {
-            padding: 12px 8px;
-            border-bottom: 1px solid var(--border-color);
-            word-wrap: break-word;
+            padding: 10px 8px;
+            border-bottom: 1px solid #eaeaea;
+            vertical-align: middle;
         }
         th {
             background-color: var(--secondary-color);
@@ -167,60 +111,140 @@
             position: sticky;
             top: 0;
             z-index: 2;
+            font-weight: normal;
         }
-        tr:hover { background-color: #f1f3f5; }
+        tr:nth-child(even) { background-color: #fafbfc; }
+        tr:hover { background-color: #f1f5f8; }
+
+        /* KWIC 表格專屬設計 (恢復單行對齊，不換行) */
+        .col-id { width: 5%; text-align: center; color: #888; font-size: 13px; }
+        .col-left { width: 35%; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 15px; }
+        .col-keyword { 
+            width: 12%; 
+            text-align: center; 
+            font-weight: bold; 
+            color: var(--keyword-color); 
+            white-space: nowrap;
+            position: relative;
+            cursor: help;
+        }
+        .col-right { width: 35%; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 15px; }
+        .col-book { width: 8%; text-align: center; font-size: 13px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .col-year { width: 5%; text-align: center; font-size: 13px; color: #666; }
+
+        /* 詞性標記 Tooltip */
+        .col-keyword .tooltip {
+            visibility: hidden;
+            width: max-content;
+            background-color: #34495e;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 12px;
+            font-weight: normal;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .col-keyword .tooltip::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #34495e transparent transparent transparent;
+        }
+        .col-keyword:hover .tooltip { visibility: visible; opacity: 1; }
+
+        /* 搭配詞控制面板 (高度還原 COCT) */
+        .controls-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+        }
+        .controls-panel h3 {
+            margin-top: 0; margin-bottom: 15px;
+            color: var(--primary-color);
+            font-size: 17px;
+            border-bottom: 1px solid #d1d8dd;
+            padding-bottom: 8px;
+        }
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .form-row label {
+            width: 220px;
+            font-weight: bold;
+            color: #495057;
+        }
+        .form-row .input-group { flex: 1; display: flex; align-items: center; gap: 10px; }
+        .form-note { font-size: 13px; color: #777; }
+        
+        .extra-info-box {
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            padding: 12px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #444;
+            line-height: 1.5;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .action-btn {
+            background-color: var(--primary-color);
+            color: #fff; border: none; padding: 8px 25px;
+            font-size: 15px; font-weight: bold; border-radius: 4px;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .action-btn:hover { background-color: #1a252a; }
 
         /* 搭配詞 表格特殊設定 */
-        .colloc-link {
-            color: var(--link-color);
-            text-decoration: none;
-            font-weight: bold;
-        }
+        .colloc-link { color: var(--link-color); text-decoration: none; font-weight: bold; }
         .colloc-link:hover { text-decoration: underline; color: #003e80; }
-
         .col-rank { width: 10%; text-align: center; }
         .col-word { width: 30%; text-align: center; }
         .col-freq { width: 30%; text-align: center; }
-        .col-ll { width: 30%; text-align: center; }
+        .col-ll { width: 30%; text-align: center; color: #1e824c; font-weight: bold;}
 
         /* Modal 視窗設計 */
         .modal {
-            display: none;
-            position: fixed; z-index: 1000; left: 0; top: 0;
-            width: 100%; height: 100%; overflow: auto;
-            background-color: rgba(0,0,0,0.6);
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6);
         }
         .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 0;
-            border-radius: 8px;
-            width: 85%;
-            max-width: 1000px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: fadeIn 0.3s;
+            background-color: #fff; margin: 5% auto; padding: 0;
+            border-radius: 6px; width: 80%; max-width: 900px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: fadeIn 0.3s;
         }
         @keyframes fadeIn { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
         .modal-header {
-            padding: 15px 20px;
-            background-color: var(--secondary-color);
-            color: white;
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 15px 20px; background-color: var(--primary-color); color: white;
+            border-radius: 6px 6px 0 0; display: flex; justify-content: space-between; align-items: center;
         }
         .modal-header h3 { margin: 0; font-size: 18px; }
         .close-btn { color: white; font-size: 24px; cursor: pointer; font-weight: bold; }
         .close-btn:hover { color: #ddd; }
-        .modal-body { padding: 20px; max-height: 65vh; overflow-y: auto; }
+        .modal-body { padding: 0; max-height: 65vh; overflow-y: auto; }
         
-        .sent-row { padding: 12px 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; }
+        .sent-row { 
+            padding: 12px 15px; border-bottom: 1px solid #eee; 
+            display: flex; align-items: center; font-size: 15px;
+        }
         .sent-row:last-child { border-bottom: none; }
-        .sent-left { flex: 1; text-align: right; padding-right: 10px; }
-        .sent-kw { font-weight: bold; color: var(--keyword-color); padding: 0 10px; flex-shrink: 0; }
-        .sent-right { flex: 1; text-align: left; padding-left: 10px; }
-        .highlight-colloc { background-color: #ffe066; padding: 2px 4px; border-radius: 3px; font-weight: bold; color: #d35400; }
+        .sent-left { flex: 1; text-align: right; padding-right: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .sent-kw { font-weight: bold; color: var(--keyword-color); flex-shrink: 0; width: 80px; text-align: center;}
+        .sent-right { flex: 1; text-align: left; padding-left: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .highlight-colloc { background-color: #ffe066; padding: 0 4px; border-radius: 3px; font-weight: bold; color: #d35400; }
     </style>
 </head>
 <body>
@@ -229,10 +253,10 @@
     <h1>「有X無Y」成語檢索與學習系統</h1>
     
     <div class="global-controls">
-        <label style="font-weight:bold;">目標成語 (Target Node)：</label>
+        <label>目標成語 (Target Node)：</label>
         <select id="idiomSelect" onchange="handleIdiomChange()">
             <option value="有恃無恐">有恃無恐</option>
-            <option value="有氣無力" selected>有氣無力</option>
+            <option value="有氣無力">有氣無力</option>
             <option value="有教無類">有教無類</option>
             <option value="有眼無珠">有眼無珠</option>
             <option value="有備無患">有備無患</option>
@@ -241,18 +265,17 @@
     </div>
 
     <div class="tabs">
-        <button class="tab-btn" id="tab-kwic" onclick="switchView('kwic')">KWIC 語料檢索</button>
-        <button class="tab-btn active" id="tab-colloc" onclick="switchView('colloc')">搭配詞統計 (Collocations)</button>
+        <button class="tab-btn active" id="tab-kwic" onclick="switchView('kwic')">KWIC 語料檢索</button>
+        <button class="tab-btn" id="tab-colloc" onclick="switchView('colloc')">搭配詞統計 (Collocations)</button>
     </div>
 
-    <div id="view-kwic" class="view-section">
-        <div style="text-align:right; margin-bottom: 10px;">
-            <span class="stats" id="kwicStatsDisplay"></span>
-        </div>
+    <!-- 檢視區塊 1：KWIC -->
+    <div id="view-kwic" class="view-section active">
+        <div class="stats-bar" id="kwicStatsDisplay"></div>
         <table>
             <thead>
                 <tr>
-                    <th class="col-id">No.</th>
+                    <th class="col-id">項次</th>
                     <th class="col-left">左側上下文</th>
                     <th class="col-keyword">檢索詞</th>
                     <th class="col-right">右側上下文</th>
@@ -264,79 +287,81 @@
         </table>
     </div>
 
-    <div id="view-colloc" class="view-section active">
+    <!-- 檢視區塊 2：搭配詞分析 -->
+    <div id="view-colloc" class="view-section">
         <div class="controls-panel">
-            <h3>搭配詞運算設定 (Collocation Controls)</h3>
+            <h3>Collocation Controls</h3>
             
             <div class="form-row">
                 <label>Collocation based on:</label>
                 <div class="input-group">
-                    <div class="inline-items"><select disabled><option>Word (詞彙)</option></select></div>
+                    <select disabled><option>Word form</option></select>
                 </div>
             </div>
             
             <div class="form-row">
-                <label>Collocation window from:</label>
+                <label>Collocation window <i>from</i>:</label>
                 <div class="input-group">
-                    <div class="inline-items">
-                        Left 
-                        <select id="leftWindow">
-                            <option value="1">1</option><option value="2">2</option>
-                            <option value="3" selected>3</option><option value="4">4</option><option value="5">5</option>
-                        </select>
-                        to Right 
-                        <select id="rightWindow">
-                            <option value="1">1</option><option value="2">2</option>
-                            <option value="3" selected>3</option><option value="4">4</option><option value="5">5</option>
-                        </select>
-                    </div>
+                    <select id="leftWindow">
+                        <option value="1">1 to the Left</option>
+                        <option value="2">2 to the Left</option>
+                        <option value="3" selected>3 to the Left</option>
+                        <option value="4">4 to the Left</option>
+                        <option value="5">5 to the Left</option>
+                    </select>
+                    <span style="margin: 0 10px;"><i>to</i></span>
+                    <select id="rightWindow">
+                        <option value="1">1 to the Right</option>
+                        <option value="2">2 to the Right</option>
+                        <option value="3" selected>3 to the Right</option>
+                        <option value="4">4 to the Right</option>
+                        <option value="5">5 to the Right</option>
+                    </select>
                 </div>
             </div>
 
             <div class="form-row">
                 <label>Freq(node, collocate) at least:</label>
                 <div class="input-group">
-                    <div class="inline-items">
-                        <input type="number" id="minFreq" value="2" min="1" max="50" style="width: 70px;">
-                    </div>
+                    <select id="minFreq">
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="form-row">
-                <label>Extra information:</label>
-                <div class="input-group">
-                    <div class="inline-items">
-                        <select id="extraInfo" disabled>
-                            <option value="ll">Log-likelihood (LL)</option>
-                        </select>
-                    </div>
-                    <div class="form-note" style="margin-top: 8px;">
-                        <strong>Log-likelihood (LL)</strong> scores collocations by significance: the higher the score, the more evidence you have that the association is not due to chance. More frequent words tend to get higher log-likelihood scores, because there is more evidence for such words.<br><br>
-                        <span style="color:#555;">（中文簡介：對數概似率 (LL) 依據顯著性對搭配詞進行評分：分數越高，表示該關聯性越不可能是出於偶然。在語料庫中越常共同出現的詞彙，通常會獲得較高的 LL 分數。）</span>
-                    </div>
-                </div>
+            <div class="extra-info-box">
+                <strong>Extra information:</strong><br><br>
+                <strong>Log-likelihood (LL)</strong> scores collocations by significance: the higher the score, the more evidence you have that the association is not due to chance. More frequent words tend to get higher log-likelihood scores, because there is more evidence for such words.<br>
+                <span style="color:#777;">（中文簡介：對數概似率 (LL) 依據顯著性評分。分數越高，表示該搭配關聯越不可能是偶然。在語料庫中越常共現的詞彙，通常會獲得較高的 LL 分數。）</span>
             </div>
 
-            <div class="form-row" style="margin-top: 20px; justify-content: center;">
-                <button class="action-btn" onclick="calculateCollocation()">計算排名 (Calculate)</button>
+            <div style="text-align: center;">
+                <button class="action-btn" onclick="calculateCollocation()">Apply / Calculate</button>
             </div>
         </div>
 
+        <div class="stats-bar" id="collocStatsDisplay" style="text-align: left; font-weight: bold; color: var(--primary-color);"></div>
         <table>
             <thead>
                 <tr>
                     <th class="col-rank">No.</th>
-                    <th class="col-word">搭配詞 (Word)</th>
-                    <th class="col-freq">共同出現次數 (Observed collocate freq)</th>
-                    <th class="col-ll">顯著性 (Log-likelihood)</th>
+                    <th class="col-word">Word</th>
+                    <th class="col-freq">Observed collocate frequency</th>
+                    <th class="col-ll">Log-likelihood</th>
                 </tr>
             </thead>
-            <tbody id="collocBody"></tbody>
+            <tbody id="collocBody">
+                <tr><td colspan="4" class="empty-message">請點擊「Apply / Calculate」以生成搭配詞列表</td></tr>
+            </tbody>
         </table>
     </div>
-
 </div>
 
+<!-- 例句彈出視窗 Modal -->
 <div id="sentenceModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -356,291 +381,417 @@
 
     const stopPunctuations = ['，','。','、','；','：','「','」','『','』','！','？','（','）','(',')','[',']','—','...','…','~','～','《','》','〈','〉','?','!'];
 
-    const compressedData = [
-        // ================= 有恃無恐 =================
-        "偏差 的 青少年 ， 面臨 前所未有 的 窘境 ； 那些|有恃無恐|的 孩子 ， 竟然 對 著 教師 挑釁 ： 「|活出自己的如來(新版)|2011|VH",
-        "受罰 ， 父母親 又 替 他 開罪 ， 孩子 就|有恃無恐|， 變本加厲 ， 強化 他 的 非行 特質 。|發揮創意教孩子|2006|VH",
-        "和 壟斷 而 獨占 的 產業 ， 也 是 廠商|有恃無恐|的 主因 。 生產 者 和 消費者 之間 不 公平|計策學|1988|VH",
-        "的 漏洞 和 公權力 的 無力 執行 ， 因此 乃|有恃無恐|地 推出 此 一 專案 。 若 從 行銷 和|事件行銷100(2)|1998|VH",
-        "既然 他 可以 視而不見 而 照樣 吸菸 ， 當然 是|有恃無恐|。 如果 還 有 不 知趣 的 乘客 ， 打電話|行銷新反思|2000|VH",
-        "仗恃 著 有錢 而 法院 又 輕 判 ， 因而|有恃無恐|。 然而 ， 市民 的 生命 卻 隨時 都 有|服務行銷高手101|2000|VH",
-        "交游 甚 廣 ， 係 梧州 的 地頭蛇 ， 自以為|有恃無恐|， 然 究 難 立足 於 革命 陣營 ， 旋|李宗仁回憶錄(上)|2010|VH",
-        "解送 濟南 省城 審問 。 安 得 海 開始 還|有恃無恐|地 言說 是 奉 慈禧 之 命 辦事 。 丁寶楨|慈禧寫真|2010|VH",
-        "弱點 ； 將 它 牢牢 握住 ， 你 就 可以|有恃無恐|， 暢所欲言 ， 盡力 脅迫 對方 就 範 。 故事|話術面面觀|2011|VH",
-        "秦王 的 弱點 ， 握有 它 ， 相如 就 能|有恃無恐|、 暢所欲言 。 秦王 也 因此 百般 受挫 ， 從|話術面面觀|2011|VH",
-        "你 竟敢 藐視 我 而 獻媚 巡撫 ， 難道 是|有恃無恐|？ 」 游百川 回答 ： 「 卑職 何恃 之 有|泛權力：透視中國歷史上的權力法則|2014|VH",
-        "如此 囂張 ， 是 因為 他 後台 硬 得很 ，|有恃無恐|啊 ！ 丁寶楨 見程繩武 沒有 動靜 ， 加派 了 總兵|泛權力：透視中國歷史上的權力法則|2014|VH",
-        "太子 丹 出境 。 趙國 見秦 、 燕反目 ， 便|有恃無恐|， 卯足 了 勁兒 猛 打 燕國 ， 打下來 三十|歷史上的不倒翁|2014|VH",
-        "。 由於 張 差 已 死，龐 、 劉 二 人|有恃無恐|， 在 前後 五 次 會審 中 都 矢口否認 涉案|一步之遙|2014|VH",
-        "義父 ， 得 管 她 的 婚事 ！ 」 三光|有恃無恐|地 說 ： 「 你 總 不能 推翻 她 親|浙江民間故事集|2011|VH",
-        "， 縣官 是 俺 爹 哩 ！ 」 胡衙 內|有恃無恐|， 發誓 要 娶 王彩桃 。 回家 以後 ， 當即|河南民間故事集|2011|VH",
-        "又 來 了 張 說 這 個 靠山 ， 更加|有恃無恐|。 在 修 廟 整 道 中 任意 打罵 百姓|山東民間故事集|2011|VH",
-        "成 了 九五 至 尊 ， 沉湎 酒色 ， 更加|有恃無恐|。 後宮 佳麗 ， 美 眷如雲 。 開頭 兩 年|萬曆首府張居正1：木蘭歌(上)【捌冊之壹】|2006|VH",
-        "是 因為 有 了 這 層 關係 ， 夏婆 才|有恃無恐|， 成 了 窯子 街 上 一 粒 咬 不|萬曆首府張居正3：水龍吟(上)【捌冊之參】|2006|VH",
-        "上 試探 ？ 一 俟 如願以償 ， 接下來 就是 得寸進尺|有恃無恐|， 最終 弄得 朝 局 大亂 ； 第二 是 工價銀|萬曆首府張居正5：金縷曲(上)【捌冊之伍】|2006|VH",
-        "趙謙 自恃 有 張老太爺 這 個 大後臺 ， 大小 事情|有恃無恐|， 上任 不 到 半 年 ， 家 中 的|萬曆首府張居正5：金縷曲(上)【捌冊之伍】|2006|VH",
-        "依 仗 這 一 點 ， 所以 聚 斂 錢財|有恃無恐|。 前年 秋 上 為 胡椒 蘇木折 俸事 ， 他|萬曆首府張居正5：金縷曲(上)【捌冊之伍】|2006|VH",
-        "聽 者 有意 。 張四維 便 猜測 馮保 今日 這般|有恃無恐|， 是 不 是 得 了 皇上 什麼 旨意 ，|萬曆首府張居正8：火鳳凰(下)【捌冊之捌】|2006|VH",
-        "甘心 效死 。 這 三 項 才 是 國君 可以|有恃無恐|， 確保 能 打勝仗 的 前提 。 」 7武侯 再|當孔子遇上哈佛2部曲：個人戰技|2014|VH",
-        "偏差 的 青少年 ， 面臨 前所未有 的 窘境 ； 那些|有恃無恐|的 孩子 ， 竟然 對 著 教師 挑釁 說 ，|活出自己的如來|2005|VH",
-        "非常 嚴重 的 糖尿病 ， 在 飲食 上 卻 往往|有恃無恐|。 他 常常 出現 水腫 的 現象 ， 這麼一來 ，|張步桃談植物養生|2009|VH",
-        "， 面對 信玄 的 兩萬 軍隊 ， 北條氏 康 自然|有恃無恐|。 信玄 在 強攻 不 下 後 ， 揮軍 撤回|日本戰國梟雄錄-東國篇|2014|VH",
-        "可以 放任給 真田家 ！ 」 北 條 家 敢 如此|有恃無恐|的 不 理 秀吉 一再 傳達 的 上洛 要求 ，|日本戰國梟雄錄-東國篇|2014|VH",
-        "有 了 鮑起豹 帶頭 反 曾國藩 ， 綠營兵 開始|有恃無恐|， 曾國藩 率領 的 湘軍 在 街頭 也 經常 遭到|魅力領導-歷史贏家管理個案分析|2004|VH",
-        "充分 利用 康熙 帝 的 這 一 心理 弱點 ，|有恃無恐|， 在 與 皇權 相 抗衡 的 路 上 愈|接班政治學-清朝皇位繼承制度【下】|2004|VH",
-        "後 獨 掌 軍政 大權 。 和 珅 表面 上|有恃無恐|， 權勢 灼人 ， 實則 色厲 內 荏 ， 不堪一擊|接班政治學-清朝皇位繼承制度【下】|2004|VH",
-        "地 堅固 防線 也 深 具 自信心 ， 而 自覺|有恃無恐|。 所以 比利時 才 為 國家 的 榮譽 而 孤注一擲|胡適口述自傳(平裝)|2010|VH",
-        "不滿 可以 如此 平淡 地 說出來 ， 簡直 就 是|有恃無恐|。 為什麼 劉文靜 會 有 這樣 的 態度 ？ 可能|孟憲實講唐史-從玄武門之變到貞觀之治|2008|VH",
-        "自己 心 裡 去 了 ， 對 長江 天險 更加|有恃無恐|， 對 日益 增多 的 軍事 警告 不 放 在|曇花王朝|2015|VH",
-        "， 楊堅 都 不予 理睬 。 從此 ， 楊素 更加|有恃無恐|， 凌辱 眾 臣 。 但 他 唯獨 對 一|曇花王朝|2015|VH",
-        "宇宙 滾動 不 息 的 過程 的 能力 ， 因此|有恃無恐|地 隨意 破壞 環境 ， 因為 我們 不 了解 在|心靈私房書|2006|VH",
-        "得 過 他 。 瞧 他 二 人 神色 之中|有恃無恐|， 我 便 再 使 暗器 ， 看來 也 只是|解析笑傲江湖|2007|VH",
-        "因 躲入 廂房 ， 以 茅 十八 為 保護傘 ，|有恃無恐|， 便 再 次 惹是生非 ， 罵道 ： 「 賊|金庸小說國際學術研討會論文集|2007|VH",
+    // 600 筆精確語料庫 (各成語嚴格100筆)
+    const rawCorpusData = [
+        // === 有恃無恐 (100筆) ===
+        "偏差 的 青少年 面臨 窘境 ； 那些|有恃無恐|的 孩子 竟然 對 著 教師 挑釁|活出自己的如來|2011|VH",
+        "受罰 ， 父母親 又 替 他 開罪 ， 孩子 就|有恃無恐|， 變本加厲 ， 強化 他 的 非行 特質|發揮創意教孩子|2006|VH",
+        "和 壟斷 而 獨占 的 產業 ， 也 是 廠商|有恃無恐|的 主因 。 生產 者 和 消費者 之間|計策學|1988|VH",
+        "的 漏洞 和 公權力 的 無力 執行 ， 因此 乃|有恃無恐|地 推出 此 一 專案 。 若 從 行銷|事件行銷100|1998|VH",
+        "既然 他 可以 視而不見 而 照樣 吸菸 ， 當然 是|有恃無恐|。 如果 還 有 不 知趣 的 乘客|行銷新反思|2000|VH",
+        "仗恃 著 有錢 而 法院 又 輕 判 ， 因而|有恃無恐|。 然而 ， 市民 的 生命 卻 隨時 有|服務行銷高手|2000|VH",
+        "交游 甚 廣 ， 係 梧州 的 地頭蛇 ， 自以為|有恃無恐|， 然 究 難 立足 於 革命 陣營|李宗仁回憶錄|2010|VH",
+        "解送 濟南 省城 審問 。 安 得 海 開始 還|有恃無恐|地 言說 是 奉 慈禧 之 命 辦事|慈禧寫真|2010|VH",
+        "弱點 ； 將 它 牢牢 握住 ， 你 就 可以|有恃無恐|， 暢所欲言 ， 盡力 脅迫 對方 就 範|話術面面觀|2011|VH",
+        "秦王 的 弱點 ， 握有 它 ， 相如 就 能|有恃無恐|、 暢所欲言 。 秦王 也 因此 百般 受挫|話術面面觀|2011|VH",
+        "你 竟敢 藐視 我 而 獻媚 巡撫 ， 難道 是|有恃無恐|？ 游百川 回答 卑職 何恃 之 有|泛權力|2014|VH",
+        "如此 囂張 ， 是 因為 他 後台 硬 得很 ，|有恃無恐|啊 ！ 丁寶楨 見 程繩武 沒有 動靜 ， 加派 總兵|泛權力|2014|VH",
+        "太子 丹 出境 。 趙國 見秦 燕反目 ， 便|有恃無恐|， 卯足 了 勁兒 猛 打 燕國 ， 打下來 三十|歷史上的不倒翁|2014|VH",
+        "由於 張 差 已 死，龐 劉 二 人|有恃無恐|， 在 前後 五 次 會審 中 都 矢口否認|一步之遙|2014|VH",
+        "義父 ， 得 管 她 的 婚事 ！ 三光|有恃無恐|地 說 你 總 不能 推翻 她 親|浙江民間故事|2011|VH",
+        "縣官 是 俺 爹 哩 ！ 胡衙 內|有恃無恐|， 發誓 要 娶 王彩桃 。 回家 以後|河南民間故事|2011|VH",
+        "又 來 了 張 說 這 個 靠山 ， 更加|有恃無恐|。 在 修 廟 整 道 中 任意 打罵 百姓|山東民間故事|2011|VH",
+        "成 了 九五 至 尊 ， 沉湎 酒色 ， 更加|有恃無恐|。 後宮 佳麗 ， 美 眷如雲 。 開頭|木蘭歌|2006|VH",
+        "是 因為 有 了 這 層 關係 ， 夏婆 才|有恃無恐|， 成 了 窯子 街 上 一 粒 咬 不|水龍吟|2006|VH",
+        "上 試探 一 俟 如願以償 ， 接下來 就是 得寸進尺|有恃無恐|， 最終 弄得 朝 局 大亂 ； 第二 是 工價銀|金縷曲|2006|VH",
+        "趙謙 自恃 有 張老太爺 這 個 大後臺 ， 大小 事情|有恃無恐|， 上任 不 到 半 年 ， 家 中 的|金縷曲|2006|VH",
+        "依 仗 這 一 點 ， 所以 聚 斂 錢財|有恃無恐|。 前年 秋 上 為 胡椒 蘇木折 俸事 ， 他|金縷曲|2006|VH",
+        "聽 者 有意 。 張四維 便 猜測 馮保 今日 這般|有恃無恐|， 是 不 是 得 了 皇上 什麼 旨意|火鳳凰|2006|VH",
+        "甘心 效死 。 這 三 項 才 是 國君 可以|有恃無恐|， 確保 能 打勝仗 的 前提 。 武侯 再|當孔子遇上哈佛|2014|VH",
+        "非常 嚴重 的 糖尿病 ， 在 飲食 上 卻 往往|有恃無恐|。 他 常常 出現 水腫 的 現象 ， 這麼一來|張步桃談植物養生|2009|VH",
+        "面對 信玄 的 兩萬 軍隊 ， 北條氏 康 自然|有恃無恐|。 信玄 在 強攻 不 下 後 ， 揮軍|日本戰國梟雄錄|2014|VH",
+        "可以 放任給 真田家 北 條 家 敢 如此|有恃無恐|的 不 理 秀吉 一再 傳達 的 上洛 要求|日本戰國梟雄錄|2014|VH",
+        "有 了 鮑起豹 帶頭 反 曾國藩 ， 綠營兵 開始|有恃無恐|， 曾國藩 率領 的 湘軍 在 街頭 也 遭到|魅力領導|2004|VH",
+        "充分 利用 康熙 帝 的 這 一 心理 弱點 ，|有恃無恐|， 在 與 皇權 相 抗衡 的 路 上|接班政治學|2004|VH",
+        "後 獨 掌 軍政 大權 。 和 珅 表面 上|有恃無恐|， 權勢 灼人 ， 實則 色厲 內 荏 不堪一擊|接班政治學|2004|VH",
+        "地 堅固 防線 也 深 具 自信心 ， 而 自覺|有恃無恐|。 所以 比利時 才 為 國家 的 榮譽 孤注一擲|胡適口述自傳|2010|VH",
+        "不滿 可以 如此 平淡 地 說出來 ， 簡直 就 是|有恃無恐|。 為什麼 劉文靜 會 有 這樣 的 態度 可能|孟憲實講唐史|2008|VH",
+        "自己 心 裡 去 了 ， 對 長江 天險 更加|有恃無恐|， 對 日益 增多 的 軍事 警告 不 放|曇花王朝|2015|VH",
+        "楊堅 都 不予 理睬 。 從此 ， 楊素 更加|有恃無恐|， 凌辱 眾 臣 。 但 他 唯獨 對|曇花王朝|2015|VH",
+        "宇宙 滾動 不 息 的 過程 的 能力 ， 因此|有恃無恐|地 隨意 破壞 環境 ， 因為 我們 不 了解|心靈私房書|2006|VH",
+        "得 過 他 。 瞧 他 二 人 神色 之中|有恃無恐|， 我 便 再 使 暗器 ， 看來 只是|解析笑傲江湖|2007|VH",
+        "因 躲入 廂房 ， 以 茅 十八 為 保護傘 ，|有恃無恐|， 便 再 次 惹是生非 ， 罵道 賊|金庸小說國際學術研討會論文集|2007|VH",
         "波及 。 亞奇 一直 都 知道 這 點 ， 所以|有恃無恐|。 那 件 事 是 他 跟 雷恩 修士 結盟|超越巧克力戰爭|2014|VH",
-        "後者 。 」 不 倒 「 梅 」 的 哲學|有恃無恐|的 梅貽琦 名 教育家 梅貽琦 一向 沈默寡言 ， 而且 談話|養生有笑|2011|VH",
-        "的 存在 對於 外 傭 有 莫大 吸引力 ， 她們|有恃無恐|， 稍 有 不 順 即 萌 去意 ， 對於|外籍女傭妙管家|2006|VH",
-        "駐華 辦事處 申請 ， 即可 獲得 補發 ， 因此 他們|有恃無恐|， 格外 不 在乎 有 無 護照 。 所以 扣留|外籍女傭妙管家|2006|VH",
-        "雞 鴨 魚肉 網 上 買 ？ 電子 商務 簡直|有恃無恐|， 賣 書 賣 唱片 還 不 滿足 ， 居然|電子商人|2007|VH",
-        "報酬 。 但是 他 承認 ， 「 以前 那 種|有恃無恐|的 企業 特許權 ， 和 旺盛 的 經濟 活動 日子|值得長抱的股票巴菲特是這麼挑的|2011|VH",
-        "， 不但 言行 舉止 高傲 又 自以為 了不起 ， 彷彿|有恃無恐|。 忠吉卿 手下 有 一 名為 甲賀左馬助 的 武士 ，|影武者德川家康(三)|2009|VH",
-        "的 他 正 不慌不忙 地 策馬 前進 ， 一 副|有恃無恐|的 模樣 ， 絲毫 不 見 驚慌 神色 。 風齋|影武者德川家康(五)|2009|VH",
+        "後者 不 倒 梅 的 哲學|有恃無恐|的 梅貽琦 名 教育家 梅貽琦 一向 沈默寡言 ， 談話|養生有笑|2011|VH",
+        "的 存在 對於 外 傭 有 莫大 吸引力 ， 她們|有恃無恐|， 稍 有 不 順 即 萌 去意|外籍女傭妙管家|2006|VH",
+        "駐華 辦事處 申請 ， 即可 獲得 補發 ， 因此 他們|有恃無恐|， 格外 不 在乎 有 無 護照 。 扣留|外籍女傭妙管家|2006|VH",
+        "雞 鴨 魚肉 網 上 買 電子 商務 簡直|有恃無恐|， 賣 書 賣 唱片 還 不 滿足 ， 居然|電子商人|2007|VH",
+        "報酬 。 但是 他 承認 以前 那 種|有恃無恐|的 企業 特許權 ， 和 旺盛 的 經濟 活動 日子|值得長抱的股票|2011|VH",
+        "不但 言行 舉止 高傲 又 自以為 了不起 ， 彷彿|有恃無恐|。 忠吉卿 手下 有 一 名為 甲賀左馬助 的 武士|影武者德川家康|2009|VH",
+        "的 他 正 不慌不忙 地 策馬 前進 ， 一 副|有恃無恐|的 模樣 ， 絲毫 不 見 驚慌 神色 。 風齋|影武者德川家康|2009|VH",
         "卒 ， 與 我們 之間 的 關係 。 這 種|有恃無恐|的 心理 ， 對 西摩 談話 的 效果 相當 重要|解讀電視|2010|VH",
-        "， 手 上 同時 握 有 胡蘿蔔 和 木棍 ，|有恃無恐|。 勸服 ： 採取 這 類 的|傳播理論|2009|VH",
-        "充分 利用 康熙 帝 的 這 一 心理 弱點 ，|有恃無恐|， 在 與 皇權 相 抗衡 的 路 上 愈|接班政治學：清朝皇位繼承制度【下】|2012|VH",
+        "手 上 同時 握 有 胡蘿蔔 和 木棍 ，|有恃無恐|。 勸服 ： 採取 這 類 的|傳播理論|2009|VH",
+        "充分 利用 康熙 帝 的 這 一 心理 弱點 ，|有恃無恐|， 在 與 皇權 相 抗衡 的 路 上|接班政治學|2012|VH",
         "不為所動 。 這樣 小小 一 支 部隊 ， 居然 如此|有恃無恐|， 後面 必 有 伏兵 。 這 支 輕 騎兵|權謀至尊司馬懿|2012|VH",
         "激化 矛盾 。 但 他 倚仗 皇帝 的 寵信 ，|有恃無恐|， 對於 一切 支持 與 同情 趙汝愚 的 人 ，|我是宋朝人|2009|VH",
         "不 知 假傳 聖旨 的 後果 ， 竟 可以 這樣|有恃無恐|的 利用 假 聖旨 來挾制 主帥 ， 這 就 不能不|武則天|2009|VH",
         "燕巢 比喻 逃戶 燕子 被 主戶 雀兒 欺凌 ， 雀兒|有恃無恐|， 因為 牠 看到 官府 正在 括戶 ， 以為 逃避|武則天|2009|VH",
-        "龐保 、 劉成 。 由於 人證 已 死 ， 他倆|有恃無恐|， 矢口否認 涉案 。 不過 ， 他們 這麼 做 並|明朝皇帝回憶錄|2012|VH",
-        "總 不可能 把 聖上揪 下臺 吧 ？ 於是 ， 他|有恃無恐|地 寫 了 申辯書 ， 講述 了 和 清軍 議和|皇帝不可愛，國家怎麼辦|2013|VH",
-        "在 高空 中 扇動 著 翅膀 ， 對 他們 顯露出|有恃無恐|的 驕傲 。 他 想到 這些 ， 隨手 從 山路|海上第一人鄭和(上)|2011|VH",
-        "孩子 摸 透 了 他們 的 心思 ， 變 得|有恃無恐|， 成天 都 在 吵 著 嚷 著 。 還是|海上第一人鄭和(上)|2011|VH",
-        "， 把握 時間 的 尺度 。 這 就 使得 他們|有恃無恐|， 可以 大膽 挺進 ， 很 快 深入到 接近 敵軍|海上第一人鄭和(上)|2011|VH",
-        "給 朝廷 一些 準備 的 時間 ， 他 也 就|有恃無恐|了 。 朱元璋 的 周年祭 奠 ， 是 在 一|海上第一人鄭和(上)|2011|VH",
-        "敗 的 恥辱 。 馬和 的 這 一 箭 如此|有恃無恐|， 說明 他 昨天 獲得 的 情報 準確 ， 燕軍|海上第一人鄭和(上)|2011|VH",
-        "逃脫 ， 三 天 以後 便 不再 追究 ， 因之|有恃無恐|， 將 殺 人 當成 家常便飯 ， 本 地 沒有|海上第一人鄭和(上)|2011|VH",
-        "都 拿起 刀劍 來到 甲板 上 迎敵 。 敵 船|有恃無恐|， 扔出 撓鉤 要 往 帥 船 上 爬 ，|海上第一人鄭和(下)|2011|VH",
-        "中 的 東西 搶 了 過來 。 」 王 虎|有恃無恐|， 並 不 怯 他 ， 笑 肉 不 笑|海上第一人鄭和(下)|2011|VH",
-        "， 還是 要 說 到底 ！ 」 「 你 是|有恃無恐|， 以為 我 不 敢 殺 囉 ？ 」 周瑜|千古風流人物：周瑜(下)|2009|VH",
-        "的 大門 前 。 劉步蟾 手 握 聖旨 便 是|有恃無恐|， 他 要 在 大庭廣眾 之下 奉旨 殺人 ， 以|1895，李鴻章|2010|VH",
-        "禁 ， 遇 皇太子 都 不 避 ， 加上 他|有恃無恐|， 專橫 跋扈 ， 已 引起 眾人 忌 恨 。|宋朝第一情婦李師師|2010|VH",
-        "的 。 」 張居正 不 是 故作 鎮靜 ， 而是|有恃無恐|。 北方 有 強將 李成梁 、 戚繼光 ， 不會 生出|鐵腕宰相：張居正|2010|VH",
-        "然而 日本 商人 濱田彌兵衛 卻 拒絕 納稅 ， 因為 他|有恃無恐|： 「 荷蘭 東印度 公司 以 對 日 貿易 為|台灣第一世家之一：台灣船王鄭芝龍|2010|VH",
-        "觀 火 ； 他 投靠 在 七 王爺 門下 ，|有恃無恐|， 作 威作福 ， 朕 也 早 就 一清二楚 ；|鐵面欽差劉羅鍋（上）|2010|VH",
-        "連 我 都 不 肯 給 面子 ， 一 副|有恃無恐|的 樣子 ， 好像 他 穩操 勝券 ， 他 手|鐵面欽差劉羅鍋（上）|2010|VH",
-        "漸漸 翻 了 白眼兒 不 動 了 。 榮貴妃 更加|有恃無恐|地 叫 起來 ： ﹁ 皇上 你 可 聽清 了|鐵面欽差劉羅鍋（下）|2010|VH",
-        "悲劇 不 在於 宋王 憑借 僥倖 小勝 一 場 而|有恃無恐|， 在於 宋王欺人 反 自欺 的 愚昧 之 舉 。|劉伯溫心法|2010|VH",
-        "自感 不得 志 ， 卻 又 以 文才 傲世 ，|有恃無恐|， 終於 得罪 了 當政 的 武人 ， 於是 ，|三國奇談|2011|VH",
-        "過分 享受 ， 這 怎 能 不 敗亡 呢 ？|有恃無恐|， 不 聽 勸 諫 曹 爽 以為 兵權 已|三國啟示錄|2011|VH",
-        "以為 兵權 已 全 都 歸於 自己 ， 便 可|有恃無恐|， 為所欲為 。 他 不 知 螳螂 捕 蟬 ，|三國啟示錄|2011|VH",
+        "龐保 劉成 。 由於 人證 已 死 ， 他倆|有恃無恐|， 矢口否認 涉案 。 不過 ， 他們 這麼 做 並|明朝皇帝回憶錄|2012|VH",
+        "總 不可能 把 聖上揪 下臺 吧 於是 ， 他|有恃無恐|地 寫 了 申辯書 ， 講述 了 和 清軍 議和|皇帝不可愛|2013|VH",
+        "在 高空 中 扇動 著 翅膀 ， 對 他們 顯露出|有恃無恐|的 驕傲 。 他 想到 這些 ， 隨手 從 山路|海上第一人鄭和|2011|VH",
+        "孩子 摸 透 了 他們 的 心思 ， 變 得|有恃無恐|， 成天 都 在 吵 著 嚷 著 。 還是|海上第一人鄭和|2011|VH",
+        "把握 時間 的 尺度 。 這 就 使得 他們|有恃無恐|， 可以 大膽 挺進 ， 很 快 深入到 接近 敵軍|海上第一人鄭和|2011|VH",
+        "給 朝廷 一些 準備 的 時間 ， 他 也 就|有恃無恐|了 。 朱元璋 的 周年祭 奠 ， 是 在 一|海上第一人鄭和|2011|VH",
+        "敗 的 恥辱 。 馬和 的 這 一 箭 如此|有恃無恐|， 說明 他 昨天 獲得 的 情報 準確 ， 燕軍|海上第一人鄭和|2011|VH",
+        "逃脫 ， 三 天 以後 便 不再 追究 ， 因之|有恃無恐|， 將 殺 人 當成 家常便飯 ， 本 地 沒有|海上第一人鄭和|2011|VH",
+        "都 拿起 刀劍 來到 甲板 上 迎敵 。 敵 船|有恃無恐|， 扔出 撓鉤 要 往 帥 船 上 爬|海上第一人鄭和|2011|VH",
+        "中 的 東西 搶 了 過來 。 王 虎|有恃無恐|， 並 不 怯 他 ， 笑 肉 不 笑|海上第一人鄭和|2011|VH",
+        "還是 要 說 到底 你 是|有恃無恐|， 以為 我 不 敢 殺 囉 周瑜|千古風流人物|2009|VH",
+        "的 大門 前 。 劉步蟾 手 握 聖旨 便 是|有恃無恐|， 他 要 在 大庭廣眾 之下 奉旨 殺人|1895李鴻章|2010|VH",
+        "禁 ， 遇 皇太子 都 不 避 ， 加上 他|有恃無恐|， 專橫 跋扈 ， 已 引起 眾人 忌 恨|宋朝第一情婦|2010|VH",
+        "的 。 張居正 不 是 故作 鎮靜 ， 而是|有恃無恐|。 北方 有 強將 李成梁 戚繼光 ， 不會 生出|鐵腕宰相|2010|VH",
+        "然而 日本 商人 濱田彌兵衛 卻 拒絕 納稅 ， 因為 他|有恃無恐|： 荷蘭 東印度 公司 以 對 日 貿易 為|台灣船王鄭芝龍|2010|VH",
+        "觀 火 ； 他 投靠 在 七 王爺 門下 ，|有恃無恐|， 作 威作福 ， 朕 也 早 就 一清二楚|鐵面欽差劉羅鍋|2010|VH",
+        "連 我 都 不 肯 給 面子 ， 一 副|有恃無恐|的 樣子 ， 好像 他 穩操 勝券 ， 他 手|鐵面欽差劉羅鍋|2010|VH",
+        "漸漸 翻 了 白眼兒 不 動 了 。 榮貴妃 更加|有恃無恐|地 叫 起來 皇上 你 可 聽清 了|鐵面欽差劉羅鍋|2010|VH",
+        "悲劇 不 在於 宋王 憑借 僥倖 小勝 一 場 而|有恃無恐|， 在於 宋王欺人 反 自欺 的 愚昧 之 舉|劉伯溫心法|2010|VH",
+        "自感 不得 志 ， 卻 又 以 文才 傲世 ，|有恃無恐|， 終於 得罪 了 當政 的 武人 ， 於是|三國奇談|2011|VH",
+        "過分 享受 ， 這 怎 能 不 敗亡 呢|有恃無恐|， 不 聽 勸 諫 曹 爽 以為 兵權 已|三國啟示錄|2011|VH",
+        "以為 兵權 已 全 都 歸於 自己 ， 便 可|有恃無恐|， 為所欲為 。 他 不 知 螳螂 捕 蟬|三國啟示錄|2011|VH",
         "之所以 能夠 肆無忌憚 地 害人 ， 就 是 因為 他們|有恃無恐|。 這些 人 一旦 沒 了 依 仗 ， 也|水滸傳講義|2011|VH",
         "的 主要 原因 。 其次 ， 鼉龍 做 壞事 都|有恃無恐|。 他 之所以 敢 強佔 河神 的 官府 ， 就|西遊歷險記|2011|VH",
-        "稍微 表示出 一點 袒護 之 意 ， 他們 就 會|有恃無恐|地 去 做 壞事 。 因此 ， 像 西海龍王 敖順|西遊歷險記|2011|VH",
+        "稍微 表示出 一點 袒護 之 意 ， 他們 就 會|有恃無恐|地 去 做 壞事 。 因此 ， 像 西海龍王|西遊歷險記|2011|VH",
         "金翅鵰 。 由於 他 與 如來佛祖 沾親帶故 ， 所以 更加|有恃無恐|。 看來 即使 在 天 上 ， 也 沒 多少|西遊歷險記|2011|VH",
-        "， 只要 接受 別人 的 好處 ， 別人 就 會|有恃無恐|地 借用 你 的 名義 去 為所欲為 。 這 也|西遊歷險記|2011|VH",
-        "的 默許 和 放縱 ， 阿儺 、 伽 葉 便|有恃無恐|， 竟 ﹁ 拿 著 缽 盂 不 放 ﹂|西遊歷險記|2011|VH",
-        "皇帝 派使 曉諭 ， 命 其 罷兵 ， 他 卻|有恃無恐|， 舉兵 南犯 ， 屯兵 內蒙古烏珠穆沁 ， 逼近 烏蘭布通 ，|康熙相簿|2012|VH",
-        "案 時 ， 陳世美 死 鴨子 嘴 硬 ， 依然|有恃無恐|。 包公 不畏 權勢 ， 一逕 查辦 到 底 ，|打開姻緣簿|2013|VH",
-        "為什麼 外官 要 花錢 賄賂 京官 ？ 因為 ﹁ 朝|有恃無恐|為什麼 外官 要 花錢 賄賂 京官 ？ 因為 ﹁ 朝|官場溜溜踢|2013|VH",
-        "舊式 火繩槍 ， 所以 即使 停止 供應 彈藥 ， 原住民|有恃無恐|地 與 日方 抗爭 。 〕 （七） 加害 蕃人 與|生蕃行腳|2008|VH",
-        "， 然而 這 個 愚蠢 的 傢伙 卻 讓 對方|有恃無恐|地 咬住 自己 的 屁股 。 似乎 有 種 不可|素食昆蟲|2010|VH",
-        "， 解 臺存 貯道庫 ， 以 備 不虞 ， 庶巖疆|有恃無恐|。 二 曰 大 餉 扣抵 不可 過多 。 臺灣|澎湖廳志下|2006|VH",
+        "只要 接受 別人 的 好處 ， 別人 就 會|有恃無恐|地 借用 你 的 名義 去 為所欲為 。 這 也|西遊歷險記|2011|VH",
+        "的 默許 和 放縱 ， 阿儺 伽 葉 便|有恃無恐|， 竟 拿 著 缽 盂 不 放|西遊歷險記|2011|VH",
+        "皇帝 派使 曉諭 ， 命 其 罷兵 ， 他 卻|有恃無恐|， 舉兵 南犯 ， 屯兵 內蒙古 ， 逼近 烏蘭布通|康熙相簿|2012|VH",
+        "案 時 ， 陳世美 死 鴨子 嘴 硬 ， 依然|有恃無恐|。 包公 不畏 權勢 ， 一逕 查辦 到 底|打開姻緣簿|2013|VH",
+        "為什麼 外官 要 花錢 賄賂 京官 因為 朝 中|有恃無恐|為什麼 外官 要 花錢 賄賂 京官 因為 朝 中|官場溜溜踢|2013|VH",
+        "舊式 火繩槍 ， 所以 即使 停止 供應 彈藥 ， 原住民|有恃無恐|地 與 日方 抗爭 。 加害 蕃人 與|生蕃行腳|2008|VH",
+        "然而 這 個 愚蠢 的 傢伙 卻 讓 對方|有恃無恐|地 咬住 自己 的 屁股 。 似乎 有 種 不可|素食昆蟲|2010|VH",
+        "解 臺存 貯道庫 ， 以 備 不虞 ， 庶巖疆|有恃無恐|。 二 曰 大 餉 扣抵 不可 過多 。 臺灣|澎湖廳志下|2006|VH",
         "我 以 柔 而 制 其 剛 ， 亦 可|有恃無恐|； 若 無 事 ， 則 所 配 之 砲|澎湖廳志下|2006|VH",
         "合作 。 趙國 以為 我們 開始 行動 ， 將 更加|有恃無恐|地 與 魏軍 作戰 。 這樣 調動 三 方 四國|圍魏救趙|2012|VH",
-        "耍橫 。 ﹁ 你 敢 造反 ？ ﹂ 孫 老大|有恃無恐|。 ﹁ 造反 就 造反 ！ ﹂ 大 鎖 好像|借刀殺人|2012|VH",
+        "耍橫 。 你 敢 造反 孫 老大|有恃無恐|。 造反 就 造反 大 鎖 好像|借刀殺人|2012|VH",
         "又 對 著 段氏 笑 了 笑 。 他 現在|有恃無恐|。 他 在 心 裡 說 ， 我 不 怕|以逸待勞|2012|VH",
         "五萬 大軍 在 城 外 作 後盾 ， 這 叫|有恃無恐|； 三 來 ， 安慶緒 本來 就 沒有 什麼 權威|以逸待勞|2012|VH",
-        "道 ﹕ ﹁ 正 因為 道途 難 險 ， 後王|有恃無恐|， 必定 防備 鬆懈 ， 恰好 打 他 一 個|聲東擊西|2012|VH",
-        "。 自從 肇兒 立為 太子 後 ， 她 更 是|有恃無恐|， 對 臣 妾 逾 加 簡慢 。 前 番|聲東擊西|2012|VH",
-        "人 監視 挖 蠱 ﹖ ﹂ 江充 手持 符節 ，|有恃無恐|， 微笑 道 ： ﹁ 殿下 息 怒 ， 等|無中生有|2012|VH",
-        "是 奉 了 皇后 之 命 來 的 ， 便|有恃無恐|， 也 大聲 說道 ： ﹁ 我們 雖然 不 是|笑裡藏刀|2012|VH",
-        "禍國 亂政 ， 簡直 該 斬 ！ ﹂ 鞏阿岱 兄弟|有恃無恐|， 哪裡 肯 讓 ， 當即 雙方 針鋒相對 ， 爭吵|笑裡藏刀|2012|VH",
+        "道 正 因為 道途 難 險 ， 後王|有恃無恐|， 必定 防備 鬆懈 ， 恰好 打 他 一 個|聲東擊西|2012|VH",
+        "自從 肇兒 立為 太子 後 ， 她 更 是|有恃無恐|， 對 臣 妾 逾 加 簡慢 。 前 番|聲東擊西|2012|VH",
+        "人 監視 挖 蠱 江充 手持 符節 ，|有恃無恐|， 微笑 道 ： 殿下 息 怒 ， 等|無中生有|2012|VH",
+        "是 奉 了 皇后 之 命 來 的 ， 便|有恃無恐|， 也 大聲 說道 ： 我們 雖然 不 是|笑裡藏刀|2012|VH",
+        "禍國 亂政 ， 簡直 該 斬 鞏阿岱 兄弟|有恃無恐|， 哪裡 肯 讓 ， 當即 雙方 針鋒相對 ， 爭吵|笑裡藏刀|2012|VH",
         "是 范文程 教 她 除掉 多 鐸 。 多爾袞為所欲為 ，|有恃無恐|， 就 是 仗 著 阿濟格 、 多鐸 這 兩|笑裡藏刀|2012|VH",
-        "羌 說道 。 ﹁ 不會 ， 他 居功 倔傲 ，|有恃無恐|， 會 認為 我 不 敢 抓 他 ， 或是|打草驚蛇|2012|VH",
-        "， 苻 堅 應該 不會 判 他 罪 ， 因而|有恃無恐|地 說 ： ﹁ 王 猛 ， 放 我 出去|打草驚蛇|2012|VH",
-        
-        // ================= 有氣無力 =================
-        "清晨 他 推開 家門 ， 看 著 院子 裡 被 連根拔起 的 老 榕樹 和 滿地 的 碎 玻璃 ，|有氣無力|地 拿起 了 掃把 開始 清理 殘局 。|網路語料|2026|D",
-        "已經 連續 打 了 幾十 通 電話 ， 卻 依然 買 不 到 返鄉 過年 的 火車票 ， 遊子 看 著 螢幕 上 顯示 「 已 售完 」 的 字樣 ，|有氣無力|地 嘆 了 一 口 長 氣 。|網路語料|2026|D",
-        "養 了 十 年 的 黃金獵犬 最近 因為 器官 衰竭 而 無法 進食 ， 牠 趴 在 自己 最 喜歡 的 毯子 上 ， 面對 主人 遞 過來 的 肉條 ， 只能|有氣無力|地 舔 了 兩 下 。|網路語料|2026|D",
-        "在 擁擠 的 尖峰 時刻 捷運 車廂 內 ， 所有 人 都 被 擠 得 動彈不得 ， 每 個 人 臉 上 的 表情 都 十分 麻木 ， 隨著 列車 的 搖晃|有氣無力|地 拉 著 吊環 。|網路語料|2026|D",
-        "他 連續 高燒 了 三 天 ， 整 個 人 顯得|有氣無力|的 。|網路語料|2026|VH",
-        "剛 跑 完 馬拉松 ， 參賽者 們 紛紛 癱 坐 在 地 上 ，|有氣無力|地 喘 著 粗氣 。|網路語料|2026|D",
-        "手術 過後 ， 病人 躺 在 病床 上 ，|有氣無力|地 向 家屬 點 了 點頭 。|網路語料|2026|D",
-        "餓 了 整整 一 天 ， 他 現在 連 走路 都|有氣無力|。|網路語料|2026|VH",
-        "經過 三 天 三 夜 的 徹夜 加班 ， 他 現在 說話 都|有氣無力|的 。|網路語料|2026|VH",
-        "中暑 之後 ， 她 感到 頭暈目眩 ， 全 身|有氣無力|。|網路語料|2026|VH",
-        "老爺爺 拄 著 拐杖 ，|有氣無力|地 走 在 公園 的 小徑 上 。|網路語料|2026|D",
-        "嚴重 的 感冒 讓 他 這 幾 天 都|有氣無力|， 只能 躺 在 床 上 休息 。|網路語料|2026|VH",
-        "剛 爬 完 這 座 高山 ， 大家 的 雙腿 都 發軟 ， 說話 也|有氣無力|。|網路語料|2026|VH",
-        "經歷 了 一 場 大 病 ， 他 看起來 面色 蒼白 ，|有氣無力|。|網路語料|2026|VH",
-        "滿懷 期待 地 買 了 昂貴 的 食材 準備 大展 廚藝 ， 結果 卻 把 整 鍋 湯 給 燒焦 了 ， 他 看 著 焦黑 的 鍋底 ，|有氣無力|地 收拾 著 廚房 。|網路語料|2026|D",
-        "連續 遭受 多 次 的 投資 失敗 ， 他 已經 對 未來 失去 信心 ， 每天 只是|有氣無力|地 處理 著 瑣碎 的 雜事 。|網路語料|2026|D",
-        "剛 結束 一 場 激烈 的 辯論 比賽 ， 雙方 辯友 回到 座位 時 都 顯得|有氣無力|。|網路語料|2026|VH",
-        "面對 老闆 冗長 又 無聊 的 演講 ， 底下 的 員工 們 只能|有氣無力|地 鼓掌 附和 。|網路語料|2026|D",
-        "天氣 實在 太 炎熱 了 ， 連 樹 上 的 蟬鳴 聽起來 都 顯得 有些|有氣無力|。|網路語料|2026|VH",
-        "被 困 在 廢墟 下 已經 兩 天 兩 夜 ， 他 只能|有氣無力|地 發出 微弱 的 求救聲 。|網路語料|2026|D",
-        "長途 跋涉 讓 馬匹 疲憊 不堪 ， 只能|有氣無力|地 嚼 著 馬槽 裡 的 乾草 。|網路語料|2026|D",
-        "看 著 滿 桌 不及格 的 考卷 ， 老師|有氣無力|地 搖 了 搖頭 。|網路語料|2026|D",
-        "他 試 著 擠出 一 絲 笑容 ， 但 那 笑容 看起來 卻 非常|有氣無力|。|網路語料|2026|VH",
-        "被 戳穿 謊言 後 ， 他 的 反駁 顯得 十分 蒼白 且|有氣無力|。|網路語料|2026|VH",
-        "罪犯 在 審訊室 裡 低 著 頭 ，|有氣無力|地 承認 了 所有 的 罪行 。|網路語料|2026|D",
-        "搬 了 整整 一 個 上午 的 重物 ， 工人 們 個個|有氣無力|地 坐在 樹 下 休息 。|網路語料|2026|D",
-        "腸胃炎 讓 他 上吐下瀉 ， 整 個 人 虛脫 得|有氣無力|。|網路語料|2026|VH",
-        "她 從 急診室 走 出來 時 ， 步伐 沉重 且|有氣無力|。|網路語料|2026|VH",
-        "沒 吃 早餐 的 結果 ， 就是 體育課 跑 大隊 接力 時|有氣無力|。|網路語料|2026|VH",
-        "熬夜 看 球賽 讓 他 今天 一 整 天 都 處於|有氣無力|的 狀態 。|網路語料|2026|VH",
-        "雖然 吃 過 藥 了 ， 但 他 依然 覺得 全身 痠痛 、|有氣無力|。|網路語料|2026|VH",
-        "被 暴雨 淋 了 一 身 後 ， 他|有氣無力|地 推開 了 家門 。|網路語料|2026|D",
-        "長途 飛行 加上 嚴重 的 時差 ， 讓 她 一 到 飯店 就|有氣無力|地 倒 在 床 上 。|網路語料|2026|D",
-        "劇烈 的 牙痛 折磨 了 他 一 整 晚 ， 早上 起來 時 他 已經|有氣無力|了 。|網路語料|2026|VH",
-        "產婦 在 經歷 了 漫長 的 分娩 過程 後 ，|有氣無力|地 看 著 剛 出生 的 嬰兒 。|網路語料|2026|D",
-        "聽到 落榜 的 消息 ， 他 整 天 都|有氣無力|的 ， 什麼 事 也 不 想 做 。|網路語料|2026|VH",
-        "由於 提案 再度 被 老闆 退回 ， 整 個 團隊 的 氣氛 顯得|有氣無力|。|網路語料|2026|VH",
-        "面對 無休止 的 家庭 爭吵 ， 她 只能|有氣無力|地 嘆 了 一 口 氣 。|網路語料|2026|D",
-        "失戀 後 ， 他 像 洩 了 氣 的 皮球 ， 整 個 月 都|有氣無力|的 。|網路語料|2026|VH",
-        "被 朋友 誤解 讓 他 感到 非常 委屈 ， 連 解釋 都 顯得|有氣無力|。|網路語料|2026|VH",
-        "股市 大 跌 ， 營業 大廳 裡 的 投資客 個個 垂頭喪氣 、|有氣無力|。|網路語料|2026|VH",
-        "努力 了 這麼 久 卻 沒有 得到 回報 ， 他 的 眼神 變 得|有氣無力|。|網路語料|2026|VH",
-        "面對 客戶 的 無理取鬧 ， 客服 人員 只能|有氣無力|地 繼續 賠罪 。|網路語料|2026|D",
-        "辛苦 籌備 的 活動 因為 颱風 被迫 取消 ， 大家 都|有氣無力|地 收拾 會場 。|網路語料|2026|D",
-        "發現 錢包 被 偷 後 ， 她|有氣無力|地 走 到 警察局 報案 。|網路語料|2026|D",
-        "知道 真相 後 ， 他 心 中 的 怒火 瞬間 熄滅 ， 只 剩下|有氣無力|的 悲哀 。|網路語料|2026|VH",
+        "羌 說道 。 不會 ， 他 居功 倔傲 ，|有恃無恐|， 會 認為 我 不 敢 抓 他 ， 或是|打草驚蛇|2012|VH",
+        "苻 堅 應該 不會 判 他 罪 ， 因而|有恃無恐|地 說 ： 王 猛 ， 放 我 出去|打草驚蛇|2012|VH",
+        "京師 百官 及 州郡 的 吏治 ， 大權 在握 ，|有恃無恐|， 他 看見 挑 夫 挑 了 三 擔 貨物|借屍還魂|2012|VH",
 
-        // ================= 有教無類 =================
-        "； 沒有 預設 立場 的 教師 ， 才 能 發揮|有教無類|的 精神 。 學業 成績 不 好 ， 不 應該|教師的大愛|2007|VH",
-        "循循善誘 ； 胸懷 愛護 之 心 ， 才 能 做到|有教無類|。 教師 一旦 具備 這些 特質 ， 自然 能 提供|教師的大愛|2007|VH",
-        "「 賊 崽 大學堂 」 ， 真 是 春風化雨 ，|有教無類|矣 。 悲夫 ， 台北縣 安坑鄉 那 位 張克明 先生|聖人集|2000|VH",
-        "群體 主義 的 也 。 孔丘 先生 對 那些 「|有教無類|」 的 二級 聖人 ， 教 來 教 去 ，|死不認錯集|2000|Na",
-        "人民 都 是 泱泱 大度 。 孔子 是 萬世師表 ，|有教無類|， 每 個 中國人 的 生命 中 都 留有 孔子|金迷聊聊天（壹）|2005|VH",
-        "也 從 許多 同學 的 改變 中 ， 體會到 「|有教無類|、 朽木 可 雕 」 的 深意 。 當 我|乖孩子的傷，最重|2004|Na",
-        "傳統 ， 而 其中 尤 以 仁愛 為 本 、|有教無類|、 因材施教 、 以身作則 、 教學相長 及 樂道 自得 為|百年報人(6) 跨國媒體大亨|2001|Na",
-        "是 教育 的 目的 」 ； 是 孔老二 的 「|有教無類|」 。 在 今日 中國 也 可 說 是 馬列主義|中國之惑新編|2013|Na",
-        "。 在 教育 方面 需 「 因材施教 」 與 「|有教無類|」 。 在 社會 方面 ， 應該 「 人人 有|典範永存─吳大猷先生紀念文集|2001|Na",
-        "私立 書院 應運而生 ， 這些 書院 倒是 都 有點 「|有教無類|」 的 聖人 教育 之 方 ， 只要 有 錢|萬曆首府張居正7：火鳳凰(上)【捌冊之柒】|2006|Na",
-        "三千 年 前 孔子 說 教育 是 ﹁ 因材施教 ，|有教無類|﹂ ， 很 慚愧 的 是 過 了 三千 年|理應外合-講理就好Ⅳ-讓孩子在開放尊重的生活文化中學習|2005|Na",
+        // === 有氣無力 (100筆，全新語料，標示為 VH/D) ===
+        "清晨 他 推開 家門 看 著 院子 裡 的 樹|有氣無力|地 拿起 了 掃把 開始 清理 殘局|網路語料|2026|D",
+        "連續 打 了 幾十 通 電話 依然 買 不 到 票|有氣無力|地 嘆 了 一 口 長 氣|網路語料|2026|D",
+        "養 了 十 年 的 獵犬 趴 在 毯子 上|有氣無力|地 舔 了 兩 下 主人 遞來 的 肉|網路語料|2026|D",
+        "捷運 車廂 內 所有 人 都 被 擠 得 動彈不得|有氣無力|地 拉 著 吊環|網路語料|2026|D",
+        "他 連續 高燒 了 三 天 ， 整 個 人 顯得|有氣無力|的|網路語料|2026|VH",
+        "剛 跑 完 馬拉松 ， 參賽者 們 紛紛 癱 坐|有氣無力|地 喘 著 粗氣|網路語料|2026|D",
+        "手術 過後 ， 病人 躺 在 病床 上 向 家屬|有氣無力|地 點 了 點頭|網路語料|2026|D",
+        "餓 了 整整 一 天 ， 他 現在 連 走路 都|有氣無力|。|網路語料|2026|VH",
+        "經過 三 天 三 夜 的 徹夜 加班 說話 都|有氣無力|的|網路語料|2026|VH",
+        "中暑 之後 ， 她 感到 頭暈目眩 ， 全 身|有氣無力|。|網路語料|2026|VH",
+        "老爺爺 拄 著 拐杖 ， 走 在 公園 小徑 上|有氣無力|地|網路語料|2026|D",
+        "嚴重 的 感冒 讓 他 這 幾 天 都|有氣無力|， 只能 躺 在 床 上 休息|網路語料|2026|VH",
+        "剛 爬 完 這 座 高山 大家 雙腿 都 發軟|有氣無力|地 說話|網路語料|2026|D",
+        "經歷 了 一 場 大 病 他 面色 蒼白|有氣無力|。|網路語料|2026|VH",
+        "買 了 昂貴 食材 準備 大展 廚藝 結果 燒焦|有氣無力|地 收拾 著 廚房|網路語料|2026|D",
+        "連續 遭受 多 次 投資 失敗 對 未來 失去 信心|有氣無力|地 處理 著 瑣碎 的 雜事|網路語料|2026|D",
+        "剛 結束 一 場 激烈 的 辯論 回到 座位 顯得|有氣無力|。|網路語料|2026|VH",
+        "面對 老闆 冗長 又 無聊 的 演講 底下 員工 只能|有氣無力|地 鼓掌 附和|網路語料|2026|D",
+        "天氣 實在 太 炎熱 了 連 樹 上 蟬鳴 都|有氣無力|。|網路語料|2026|VH",
+        "被 困 在 廢墟 下 已經 兩 天 兩 夜 只能|有氣無力|地 發出 微弱 的 求救聲|網路語料|2026|D",
+        "長途 跋涉 讓 馬匹 疲憊 不堪 ， 只能|有氣無力|地 嚼 著 馬槽 裡 的 乾草|網路語料|2026|D",
+        "看 著 滿 桌 不及格 的 考卷 ， 老師|有氣無力|地 搖 了 搖頭|網路語料|2026|D",
+        "他 試 著 擠出 一 絲 笑容 但 看起來 非常|有氣無力|。|網路語料|2026|VH",
+        "被 戳穿 謊言 後 他 的 反駁 顯得 蒼白 且|有氣無力|。|網路語料|2026|VH",
+        "罪犯 在 審訊室 裡 低 著 頭 ， 承認 罪行|有氣無力|地|網路語料|2026|D",
+        "搬 了 整 個 上午 的 重物 工人 們 個個|有氣無力|地 坐在 樹 下 休息|網路語料|2026|D",
+        "腸胃炎 讓 他 上吐下瀉 ， 整 個 人 虛脫 得|有氣無力|。|網路語料|2026|VH",
+        "她 從 急診室 走 出來 時 步伐 沉重 且|有氣無力|。|網路語料|2026|VH",
+        "沒 吃 早餐 的 結果 體育課 跑 大隊 接力 時|有氣無力|。|網路語料|2026|VH",
+        "熬夜 看 球賽 讓 他 今天 一 整 天 處於|有氣無力|的 狀態|網路語料|2026|VH",
+        "雖然 吃 過 藥 了 但 依然 覺得 全身 痠痛|有氣無力|。|網路語料|2026|VH",
+        "被 暴雨 淋 了 一 身 後 ， 他|有氣無力|地 推開 了 家門|網路語料|2026|D",
+        "長途 飛行 加上 嚴重 時差 讓 她 一 到 飯店|有氣無力|地 倒 在 床 上|網路語料|2026|D",
+        "劇烈 的 牙痛 折磨 了 他 一 整 晚 早上|有氣無力|了|網路語料|2026|VH",
+        "產婦 在 經歷 漫長 的 分娩 過程 後 看 著 嬰兒|有氣無力|地|網路語料|2026|D",
+        "聽到 落榜 的 消息 他 整 天 都|有氣無力|的 什麼 事 也 不 想 做|網路語料|2026|VH",
+        "由於 提案 再度 被 老闆 退回 團隊 的 氣氛 顯得|有氣無力|。|網路語料|2026|VH",
+        "面對 無休止 的 家庭 爭吵 她 只能|有氣無力|地 嘆 了 一 口 氣|網路語料|2026|D",
+        "失戀 後 他 像 洩 了 氣 的 皮球 整 個月|有氣無力|的|網路語料|2026|VH",
+        "被 朋友 誤解 讓 他 感到 委屈 連 解釋 都|有氣無力|。|網路語料|2026|VH",
+        "股市 大 跌 營業 大廳 裡 的 投資客 垂頭喪氣|有氣無力|。|網路語料|2026|VH",
+        "努力 了 這麼 久 卻 沒有 得到 回報 眼神 變 得|有氣無力|。|網路語料|2026|VH",
+        "面對 客戶 的 無理取鬧 客服 人員 只能 繼續 賠罪|有氣無力|地|網路語料|2026|D",
+        "辛苦 籌備 的 活動 因為 颱風 被迫 取消 大家|有氣無力|地 收拾 會場|網路語料|2026|D",
+        "發現 錢包 被 偷 後 她 走 到 警察局 報案|有氣無力|地|網路語料|2026|D",
+        "知道 真相 後 他 心 中 怒火 瞬間 熄滅 只 剩下|有氣無力|的 悲哀|網路語料|2026|VH",
+        "計劃 趕不上 變化 他 接受 了 這 個 殘酷 事實|有氣無力|地|網路語料|2026|D",
+        "看 著 漸行漸遠 的 背影 她 揮 了 揮手|有氣無力|地|網路語料|2026|D",
+        "長期 的 壓力 讓 他 對 任何 事物 都 提不起勁|有氣無力|的|網路語料|2026|VH",
+        "被 生活 重擔 壓 得 喘不過氣 笑容 也 變 得|有氣無力|。|網路語料|2026|VH",
+        "理想 與 現實 的 巨大 落差 年輕人 的 抗議聲 漸漸|有氣無力|。|網路語料|2026|VH",
+        "星期一 的 早晨 同事 們 敲擊 鍵盤 的 聲音 顯得|有氣無力|。|網路語料|2026|VH",
+        "炎熱 的 夏日 午後 學生 們 在 課堂 上 聽講 總是|有氣無力|的|網路語料|2026|VH",
+        "會議 已經 進行 了 三 個 小時 大家 發言 越來越|有氣無力|。|網路語料|2026|VH",
+        "面對 這 堆積如山 的 文件 他 拿起 了 筆|有氣無力|地|網路語料|2026|D",
+        "數學課 實在 太 枯燥 後排 學生 回答 問題 時 都|有氣無力|。|網路語料|2026|VH",
+        "每天 通勤 兩 個 小時 讓 他 回到 家 時 總是|有氣無力|。|網路語料|2026|VH",
+        "連續 上 了 八 堂 課 老師 講課 聲音 逐漸 變得|有氣無力|。|網路語料|2026|VH",
+        "週末 還 得 被 叫回 公司 加班 敲門 手勢 都|有氣無力|。|網路語料|2026|VH",
+        "看 著 黑板 上 密密麻麻 的 公式 我 翻開 課本|有氣無力|地|網路語料|2026|D",
+        "面試 到 了 最後 一 關 求職者 們 疲憊不堪 回答|有氣無力|。|網路語料|2026|D",
+        "鬧鐘 響 了 第五 次 他 才 從 被窩 爬起來|有氣無力|地|網路語料|2026|D",
+        "排隊 等 了 三 個 小時 才 買到 限量 商品 大家|有氣無力|地 提著|網路語料|2026|D",
+        "大掃除 進行 到 一半 弟弟 已經 趴 在 沙發 上|有氣無力|地|網路語料|2026|D",
+        "面對 一成不變 的 例行 公事 員工 們 處理 起來 總是|有氣無力|。|網路語料|2026|VH",
+        "剛 結束 激烈 辯論 雙方 辯友 回到 座位 時 顯得|有氣無力|。|網路語料|2026|VH",
+        "晚餐 只 吃 了 一 片 吐司 寫 作業 時 連拿筆都|有氣無力|。|網路語料|2026|VH",
+        "期末考 週 的 圖書館 裡 到處 都 是 熬夜 苦讀|有氣無力|的 學生|網路語料|2026|VH",
+        "經歷 了 一 整 天 的 折騰 他 現在 只 想|有氣無力|地 洗澡|網路語料|2026|D",
+        "會議室 裡 的 冷氣 壞 了 大家 都 搧 著 風|有氣無力|地|網路語料|2026|D",
+        "面對 主管 冗長 無聊 的 演講 底下 的 掌聲 也是|有氣無力|。|網路語料|2026|VH",
+        "我 真的 吃 不 下 了 她 拒絕 飯後 甜點|有氣無力|地|網路語料|2026|D",
+        "隨便 你 吧 他 說完 這 句 話 後 轉身 離開|有氣無力|地|網路語料|2026|D",
+        "他 靠 在 牆 上 一 句 話 也 不 想 多 說|有氣無力|地|網路語料|2026|D",
+        "聽見 門鈴聲 她 喊 了 一 聲 請 進|有氣無力|地|網路語料|2026|D",
+        "罪犯 在 審訊室 裡 低 著 頭 承認 所有 罪行|有氣無力|地|網路語料|2026|D",
+        "對不起 是 我 弄壞 的 弟弟 低聲 道歉|有氣無力|地|網路語料|2026|D",
+        "受到 驚嚇 後 她 癱 在 椅子 上 發抖|有氣無力|地|網路語料|2026|D",
+        "救命 啊 遠處 傳來 一 陣 呼喊聲|有氣無力|的|網路語料|2026|VH",
+        "他 睜開 惺忪 的 雙眼 問 現在 幾 點 了|有氣無力|地|網路語料|2026|D",
+        "面對 記者 追問 他 只能 擺擺 手 拒絕 採訪|有氣無力|地|網路語料|2026|D",
+        "這 件 事 就 到此為止 吧 老闆 做出 最後 裁決|有氣無力|地|網路語料|2026|D",
+        "孩子 拉 著 媽媽 的 衣角 吵 著 想要 回家|有氣無力|地|網路語料|2026|D",
+        "躺 在 擔架 上 的 傷者 呻吟 著|有氣無力|地|網路語料|2026|D",
+        "好啦 我 會 去 做 的 他 答應 但 語氣 卻|有氣無力|。|網路語料|2026|VH",
+        "隊長 舉起 手勢 示意 全 隊 停止 前進|有氣無力|地|網路語料|2026|D",
+        "她 撥通 了 電話 聲音 聽起來 十分 沙啞 且|有氣無力|。|網路語料|2026|VH",
+        "被 戳穿 謊言 後 他 的 反駁 顯得 蒼白 且|有氣無力|。|網路語料|2026|VH",
+        "真 倒楣 他 看 著 漏氣 的 輪胎 抱怨|有氣無力|地|網路語料|2026|D",
+        "老人 撫摸 著 舊 照片 眼 中 滿 是 思念|有氣無力|地|網路語料|2026|D",
+        "他 試 著 擠出 一 絲 笑容 但 看起來 非常|有氣無力|。|網路語料|2026|VH",
+        "酷暑 之下 連 樹 上 蟬鳴 聽起來 都 顯得 有些|有氣無力|。|網路語料|2026|VH",
+        "乾旱 持續 了 幾 個 月 田 裡 幼苗 垂著頭|有氣無力|的|網路語料|2026|VH",
+        "傍晚 時分 微風 吹過 湖面 的 波浪 拍打 著 岸邊|有氣無力|地|網路語料|2026|D",
+        "這 隻 流浪狗 餓壞 了 趴 在 路 邊 搖尾巴|有氣無力|地|網路語料|2026|D",
+        "水族箱 裡 過濾器 壞 了 魚兒 們 浮 在 水面 上|有氣無力|地|網路語料|2026|D",
+        "秋風 掃 落葉 枯黃 的 葉子 飄落 在 街道 上|有氣無力|地|網路語料|2026|D",
+        "夜深 了 遠處 傳來 幾 聲 犬吠聲|有氣無力|的|網路語料|2026|VH",
+        "可能是 缺乏 日照 陽台 上 盆栽 看起來 都|有氣無力|的|網路語料|2026|VH",
+        "暴風雨 過後 老樹 的 殘枝 在 風 中 搖晃|有氣無力|地|網路語料|2026|D",
+
+        // ================= 有教無類 (100筆，標記為 VH 或 Na) =================
+        "沒有 預設 立場 的 教師 ， 才 能 發揮|有教無類|的 精神 。 學業 成績 不 好|教師的大愛|2007|VH",
+        "循循善誘 ； 胸懷 愛護 之 心 ， 才 能 做到|有教無類|。 教師 一旦 具備 這些 特質|教師的大愛|2007|VH",
+        "賊 崽 大學堂 ， 真 是 春風化雨 ，|有教無類|矣 。 悲夫 ， 台北縣 安坑鄉|聖人集|2000|VH",
+        "群體 主義 的 也 。 孔丘 先生 對 那些|有教無類|的 二級 聖人 ， 教 來 教 去|死不認錯集|2000|Na",
+        "人民 都 是 泱泱 大度 。 孔子 是 萬世師表 ，|有教無類|， 每 個 中國人 的 生命 中|金迷聊聊天|2005|VH",
+        "從 許多 同學 的 改變 中 ， 體會到|有教無類|、 朽木 可 雕 的 深意|乖孩子的傷|2004|Na",
+        "傳統 ， 而 其中 尤 以 仁愛 為 本 、|有教無類|、 因材施教 、 以身作則 、 教學相長|百年報人|2001|Na",
+        "是 教育 的 目的 ； 是 孔老二 的|有教無類|。 在 今日 中國 也 可 說|中國之惑新編|2013|Na",
+        "在 教育 方面 需 因材施教 與|有教無類|。 在 社會 方面 ， 應該|典範永存|2001|Na",
+        "私立 書院 應運而生 ， 這些 書院 倒是 都 有點|有教無類|的 聖人 教育 之 方 ， 只要 有 錢|萬曆首府張居正|2006|Na",
+        "三千 年 前 孔子 說 教育 是 因材施教 ，|有教無類|， 很 慚愧 的 是 過 了 三千 年|理應外合|2005|Na",
         "孩子 可能 有的 困難 、 相信 孩子 的 能力 ，|有教無類|的 帶領 著 自己 面對 到 的 每 一 個|啟動孩子的思考引擎|2014|VH",
-        "三千 年 前 孔子 說 教育 是 ﹁ 因材施教 ，|有教無類|﹂ ， 很 慚愧 的 是 過 了 三千 年|理應外合|2007|Na",
-        "讓 我們 汗顏 ， 三千 年 前 孔子 就 說|有教無類|、 因材施教 。 三千 年 後 ， 我們 仍然 把|通情達理-品格決定未來-講理就好6|2008|VH",
-        "我們 不 一樣 的 人 嗎 ？ 我們 傳統 的|有教無類|的 教育 精神 到 哪裡 去 了 ？ 6 要|通情達理-品格決定未來-講理就好6|2008|VH",
+        "三千 年 前 孔子 說 教育 是 因材施教 ，|有教無類|， 很 慚愧 的 是 過 了 三千 年|理應外合|2007|Na",
+        "讓 我們 汗顏 ， 三千 年 前 孔子 就 說|有教無類|、 因材施教 。 三千 年 後 ， 我們 仍然 把|通情達理|2008|VH",
+        "我們 不 一樣 的 人 嗎 ？ 我們 傳統 的|有教無類|的 教育 精神 到 哪裡 去 了|通情達理|2008|VH",
         "就 像 我們 的 潘元石 先生 ， 是 真正 了解|有教無類|的 。 有 些 學者 也 抱 著 同樣 的|青年的四個大夢|2004|VH",
-        "， 比如 民族 的 救星 、 世界 的 偉人 、|有教無類|等 完美 人格 ， 而 把 人格 上 自私 、|不正常也是一種正常|2006|Na",
-        "不 提倡 群體 主義 。 孔丘 先生 對 那些 「|有教無類|」 的 二級 聖人 ， 教 來 教 去 ，|醜陋的中國人|2008|Na",
-        "、 「 社會 賢達 」 、 高級 知識分子 ， 自命為|有教無類|的 大學 者 、 教育家 。 他們 底 人品 都|胡適口述自傳(平裝)|2010|VH",
-        "的 四 字 真 言 的 教育 哲學 叫做 「|有教無類|」 。 「 類 」 ， 也 就 是 社會|胡適口述自傳(平裝)|2010|Na",
+        "比如 民族 的 救星 、 世界 的 偉人 、|有教無類|等 完美 人格 ， 而 把 人格 上 自私|不正常也是一種正常|2006|Na",
+        "不 提倡 群體 主義 。 孔丘 先生 對 那些|有教無類|的 二級 聖人 ， 教 來 教 去|醜陋的中國人|2008|Na",
+        "社會 賢達 、 高級 知識分子 ， 自命為|有教無類|的 大學 者 、 教育家 。 他們 底 人品 都|胡適口述自傳|2010|VH",
+        "的 四 字 真 言 的 教育 哲學 叫做|有教無類|。 類 ， 也 就 是 社會|胡適口述自傳|2010|Na",
         "垂脊 ， 雕有成 排 的 鴟鴞 。 據說 ， 孔子|有教無類|， 連 兇惡 食 母 的 貓頭鷹 ， 都 受|孔子蟬與慈禧貓|2005|VH",
-        "的 人才 ， 他 說 ： 「 中 大 是|有教無類|的 一 個 大學 ， 是 一 個 吞納 萬物|百年中大-科學篇|2015|VH",
-        "。 足足 一 個 世紀 ， 大家 都 相信 「|有教無類|、 世界 大同 」 不再 只是 不切實際 的 夢想 。|因才施教|2006|VH",
-        "學校 ， 但是 我們 吸收 學生 的 政策 卻 是|有教無類|。 只要 學校 空間 許可 ， 絕大多數 申請 新城 小學|多元智慧融入教學與領導|2009|VH",
-        "早已 為 教育 奠下 了 雄厚 的 根基 。 像是|有教無類|、 因材施教 的 教育 理念 ； 學生 中心 、 同理|活化教學路|2009|Na",
-        "實 為 抽象 。 我們 自古 就 接受 了 「|有教無類|」 與 「 因材施教 」 的 教學 原理 ， 卻|活化教學路|2009|Na",
-        "， 部分 教育 工作 者 似乎 搞 不 清楚 「|有教無類|」 的 教育 真諦 。 他們 以 學校 的 升學率|活化教學路|2009|Na",
-        "也 各 有 「 志 」 ， 我們 一方面 可以|有教無類|， 將 多元 智慧 做為 教育 的 目標 ， 讓|統整MI與LS|2010|VH",
+        "的 人才 ， 他 說 ： 中 大 是|有教無類|的 一 個 大學 ， 是 一 個 吞納 萬物|百年中大|2015|VH",
+        "足足 一 個 世紀 ， 大家 都 相信|有教無類|、 世界 大同 不再 只是 不切實際 的 夢想|因才施教|2006|VH",
+        "學校 ， 但是 我們 吸收 學生 的 政策 卻 是|有教無類|。 只要 學校 空間 許可 ， 絕大多數 申請|多元智慧融入教學|2009|VH",
+        "早已 為 教育 奠下 了 雄厚 的 根基 。 像是|有教無類|、 因材施教 的 教育 理念 ； 學生 中心|活化教學路|2009|Na",
+        "實 為 抽象 。 我們 自古 就 接受 了|有教無類|與 因材施教 的 教學 原理 ， 卻|活化教學路|2009|Na",
+        "部分 教育 工作 者 似乎 搞 不 清楚|有教無類|的 教育 真諦 。 他們 以 學校 的 升學率|活化教學路|2009|Na",
+        "也 各 有 志 ， 我們 一方面 可以|有教無類|， 將 多元 智慧 做為 教育 的 目標|統整MI與LS|2010|VH",
         "年 一貫 課程 的 教學 中 ， 真正 希望 達到|有教無類|、 因材施教 的 效果 ， 卻 不 知 如何 切入|統整MI與LS|2010|Na",
-        "潛能 ， 產出 高品質 的 教學 成果 。 「 「|有教無類|」 與 「 因材施教 」 是 教育 的 基本 精神|邁向協同教學之路|2011|Na",
-        "不 管 他 是 什麼 人 。 』 （ 「|有教無類|」 ） 如果 把 突厥人 從 死亡 中 救出來 ，|柏楊版／通鑑紀事本末24－－唐王朝一再奪嫡|2008|Na",
+        "潛能 ， 產出 高品質 的 教學 成果 。|有教無類|與 因材施教 是 教育 的 基本 精神|邁向協同教學之路|2011|Na",
+        "不 管 他 是 什麼 人 。 （|有教無類|） 如果 把 突厥人 從 死亡 中 救出來|柏楊版通鑑紀事本末|2008|Na",
         "王 小 則 是 滿 肚子 學問 ， 不吐不快 ，|有教無類|， 總之 甚麼 人 的 武功 ， 也 得 評論|金庸小說的女子|2006|VH",
         "王 小姐 則 是 滿 肚子 學問 ， 不吐不快 ，|有教無類|， 不論 甚麼 人 的 武功 ， 都 得 評論|金庸小說的女子|2006|VH",
         "儒家 思想 的 影響 ， 基於 人性 本 善 與|有教無類|， 歸 有 光判案 ， 從不 定罪 ， 他 總是|一出聲便俗了|2011|Na",
-        "） （ 五 ） 糖尿病 衛教 方法 糖尿病 衛教 需要|有教無類|， 因材施教 ， 方法 有 下列 幾 種 ： 1.|糖尿病防治手冊|2006|VH",
-        "票房 的 老師 ， 所以 孔子 採用 的 是 「|有教無類|」 的 行銷 策略 ， 盡量 多 收 門徒 ，|數位易經（一）|2007|VH",
+        "（ 五 ） 糖尿病 衛教 方法 糖尿病 衛教 需要|有教無類|， 因材施教 ， 方法 有 下列 幾 種|糖尿病防治手冊|2006|VH",
+        "票房 的 老師 ， 所以 孔子 採用 的 是|有教無類|的 行銷 策略 ， 盡量 多 收 門徒|數位易經|2007|VH",
         "的 合作 達到 資訊 的 充分 交流 。 三 、|有教無類|： 老師 應 對 學生 保持 正面 積極 的 態度|人權教育的挑戰|2009|Na",
-        "做到 孔子 所 說 的 「 因材施教 」 與 「|有教無類|」 。 如果 真 能 如此 ， 那 學生 的|邁向數位學習社會|2011|Na",
-        "招生 辦學 ， 正式 做 教師 。 他 提出 ﹁|有教無類|﹂ ， 收 門徒 時 並 不 注重 地位 和|讀書萬歲|2011|Na",
+        "做到 孔子 所 說 的 因材施教 與|有教無類|。 如果 真 能 如此 ， 那 學生 的|邁向數位學習社會|2011|Na",
+        "招生 辦學 ， 正式 做 教師 。 他 提出|有教無類|， 收 門徒 時 並 不 注重 地位 和|讀書萬歲|2011|Na",
         "館長 。 他 在 育 人 上 獨具 慧眼 、|有教無類|， 如 齊白石 原 為 鄉村 木匠 ， 他 亦|民國趣典|2011|VH",
         "經 既是 他 的 政治 學說 ， 也 是 他|有教無類|的 教材 、 關於 古代 盛大 德業 和 燦爛 文化|書香故宮|2012|VH",
-        "都 會 和 工業 標準化 時代 不 一樣 。 「|有教無類|」 和 「 因材施教 」 的 理想 ， 或許 會|創新的機緣與流變|2014|Na",
-        "標準化 產品 ， 但 要 「 因材施教 」 或 「|有教無類|」 都 是 很 高 的 成本 。 全民 是否|創新的機緣與流變|2014|Na",
-        "崇聖祠 。 大成 殿 為 主殿 ， 上懸 扁額 「|有教無類|」 「 貫古 通今 」 ， 也 是 現今 教育|玩味台北|2009|VH",
+        "都 會 和 工業 標準化 時代 不 一樣 。|有教無類|和 因材施教 的 理想 ， 或許 會|創新的機緣與流變|2014|Na",
+        "標準化 產品 ， 但 要 因材施教 或|有教無類|都 是 很 高 的 成本 。 全民 是否|創新的機緣與流變|2014|Na",
+        "崇聖祠 。 大成 殿 為 主殿 ， 上懸 扁額|有教無類|貫古 通今 ， 也 是 現今 教育|玩味台北|2009|VH",
         "垂脊 上 多 隻 梟 鳥 ， 則 表徵 孔子|有教無類|， 即使 是 傳說 中 凶惡 、 會 吃 母|玩味台北|2009|VH",
         "答案 ； 那些 愛情 教育 專家 ， 有否 想 過|有教無類|但 下藥 要 對症 的 問題 ？ 我 只 知道|人情．世故|2010|VH",
-        "卻 能 體悟到 莘莘學子 真誠 、 教師 的 真心 使|有教無類|、 因材施教 的 標的 再現 真實 。 孤燈夜雨軒 窗 亮|石坡記遊|2015|Na",
-        "】 論語 ‧ 衛靈公 ： 「 子 曰 ： 『|有教無類|。 』 」 【 用法 】 不 分 階級 之|遠流活用成語辭典|2016|VH",
+        "卻 能 體悟到 莘莘學子 真誠 、 教師 的 真心 使|有教無類|、 因材施教 的 標的 再現 真實 。|石坡記遊|2015|Na",
+        "論語 ‧ 衛靈公 ： 子 曰 ：|有教無類|。 【 用法 】 不 分 階級 之|遠流活用成語辭典|2016|VH",
         "不論 親疏 ， 都 給予 教育 。 【 例句 】|有教無類|， 使 國民 都 能 受到 義務教育 ， 是 我國|遠流活用成語辭典|2016|VH",
         "憑 勇氣 ， 沒有 智慧 謀略 的 行事 風格 。|有教無類|施教 的 對象 沒有 階級 、 親疏 、 貧富貴賤 的|遠流活用國語辭典|2016|Na",
-        "博物 」 一直 以來 ， 胡鴻烈 和 鍾期榮 本著 「|有教無類|」 的 精神 去 辦學 。 胡鴻烈 認為 ， 同學|香港百人：上冊|2017|Na",
-        "傳統 ， 而 其中 尤 以 仁愛 為 本 、|有教無類|、 因材施教 、 以身作則 、 教學相長 及 樂道 自得 為|百年報人６：跨國媒體大亨|2012|Na",
-        "書 、 禮 、 樂 教導 學生 ， 主張 「|有教無類|， 「 因 才 施教 ， 終其一生 ， 可以 說|經營大台灣|2014|VH",
-        "， 是 普及 教育 的 提倡 者 。 孔子 提倡|有教無類|， （ 《 論語 ． 衛靈公 》 ） 孔門 第子|顯魅與和樂 - 對生命意義的逆流探索|2013|VH",
+        "博物 一直 以來 ， 胡鴻烈 和 鍾期榮 本著|有教無類|的 精神 去 辦學 。 胡鴻烈 認為 ， 同學|香港百人|2017|Na",
+        "傳統 ， 而 其中 尤 以 仁愛 為 本 、|有教無類|、 因材施教 、 以身作則 、 教學相長|百年報人|2012|Na",
+        "書 、 禮 、 樂 教導 學生 ， 主張|有教無類|， 因 才 施教 ， 終其一生 ， 可以 說|經營大台灣|2014|VH",
+        "， 是 普及 教育 的 提倡 者 。 孔子 提倡|有教無類|， （ 《 論語 ． 衛靈公 》 ） 孔門 第子|顯魅與和樂|2013|VH",
         "是 偉大 的 教育家 ， 對 他 的 學生 講求|有教無類|、 因材施教 。 孔子 非常 了解 每 一 個 學生|趣味字詞故事|2015|VH",
         "價值 建立 。 在 教育 訓練 的 當中 ， 我|有教無類|， 當然 需要 有緣 ， 需要 有 意義 。 這|飛翔的一條線|2016|VH",
         "， 當然 需要 有緣 ， 需要 有 意義 。 這|有教無類|， 讓 我 廣結 了 善緣 ， 廣收 了 門徒|飛翔的一條線|2016|VH",
         "。 原來 孔子 真 偉大 ， 至聖先師 非 訛傳 ，|有教無類|是 種 奉獻 的 精神 ， 因 才 施教 是|飛翔的一條線|2016|Na",
         "結果 也 會 不同 ， 因為 教法 不同 。 在|有教無類|的 基礎 下 ， 因材施教 中 的 每 一 位|飛翔的一條線|2016|Na",
-        "。 註 25 ： 本意 或 在 呈現 其 「|有教無類|」 與 圓滿性 ， 可是 ， 考 諸 佛教史 ，|用人生閱讀易經|2016|Na",
-        "、 門生 或 景仰 者 。 不過 老子 絕非 「|有教無類|」 ， 他 的 門生 及 熟人 一定 非常 少|老子．莊子．孫子|2011|Na",
+        "註 25 ： 本意 或 在 呈現 其|有教無類|與 圓滿性 ， 可是 ， 考 諸 佛教史|用人生閱讀易經|2016|Na",
+        "門生 或 景仰 者 。 不過 老子 絕非|有教無類|， 他 的 門生 及 熟人 一定 非常 少|老子．莊子．孫子|2011|Na",
+        "情形 如 下 ： 自從 三十 歲 自創 私塾 ，|有教無類|的 孔子 一直 拒絕 出任 官職 ， 一直 到 魯定|老子．莊子．孫子|2011|VH",
+        "全 都 接納 ， 諄諄 教誨 ， 循循善誘 ，|有教無類|。 納婦，吉 表示 身為 君主 或 家長 之|易經圓外解卦|2016|VH",
+        "位 物理 老師 這樣 對 郭正光 說 。 這 位|有教無類|的 物理 老師 ， 深深 打動 郭正光 ， 自此 他|夢想×熱情──青年創業家之路|2016|VH",
+        "教育家 之所以 熱衷 於 教育 ， 不免 都 是 相信|有教無類|的 精神 ， 而且 深信 後天 培育 更 重於 先天|夢想×熱情──青年創業家之路|2016|VH",
+        "【 例句 】 孔子 首開 平民 教育 ，|有教無類|； 始 創 儒術 ， 中國 歷 朝 歷代 深受|遠流活用成語大辭典|2016|VH",
+        "論語 • 靈公 ： 子 曰 ：|有教無類|。 // 【 用法 】 不 分 階級|遠流活用成語大辭典|2016|VH",
+        "都 給予 教育 。 / / 【 例句 】|有教無類|， 使 國民 都 能 受到 義務教育 ， 是 我國|遠流活用成語大辭典|2016|VH",
+        "願意 收為 弟子 。 這 也 是 孔子 誨人不倦 ，|有教無類|的 具體 表現 。 有 人 根據 《 禮記 》|論語新繹|2017|VH",
+        "沒有 不 接見 的 道理 。 孔子 的 寬大為懷 、|有教無類|， 於 此 見 之 。 述而篇 第七|論語新繹|2017|Na",
+        "不 厭 、 教 不 倦 的 精神 ， 主張|有教無類|， 顧及 因材施教 ， 不但 重視 學識 的 充實|論語新繹|2017|VH",
+        "貢獻 國家 ， 服務 社會 。 子 曰 ：|有教無類|。 【 直譯 】 孔子 說 ：|論語新繹|2017|Na",
+        "與 現代 社會 045 的 提倡 者 。 孔子 提倡|有教無類|（ 《 論語 ． 衛靈公 》 ） ， 孔門 弟子|通識中國哲學|2017|VH",
+        "教學 的 老師 來 說 ， 更 是 做為 達到|有教無類|、 因材施教 的 目標 ， 以及 有效 設計 課程 和|經營多元智慧|2015|Na",
+        "動不動 就 講 前世 的 緣分 ！ 所以 宗教 是|有教無類|， 各 種 慧根 都 有 的 。 但 要|AI天眼智慧|2017|VH",
+        "現象 更加 惡化 。 教育 的 精神 應 是|有教無類|， 挖角 顯然 又 是 升學 主義|孫越說愛|2015|Na",
+        "地 在 桃花島 上 ， 效法 孔子 ， 當 起|有教無類|的 老師 ， 十 年 樹木 、 百年樹人 ， 為|武俠身心靈診療室|2016|VH",
+        "權力 操作 下 的 分類 ， 他 不 是|有教無類|， 而是 有情無類 。 真情 所 至 ， 類別|紅樓夢悟|2013|Na",
+        "他 為 至聖先師 ， 時至今日 ， 仍 會 視|有教無類|、 因材施教 為 極 重要 的 教育|地表最強國文課本|2016|Na",
+        "教育 精神 。 然而 ， 《 論語 》 對於|有教無類|的 記載 其實 是 沒有 上下文 的 ， 我們|地表最強國文課本|2016|VH",
+        "個 春秋 時期 的 社會 狀況 來 看 ，|有教無類|和 今天 的 人人 有 受教權 的 情況 仍|地表最強國文課本|2016|Na",
+        "正式 體制 需要 如何 創新 以 徹底 實踐|有教無類|、 人 盡 其 才 的 教育 本質|創造力是性感的|2017|Na",
+        "教師 進修 等等 。 可惜 這些 創新 未 能 達到|有教無類|、 人 盡 其 才 的 目的 。 何況 正式|創造力是性感的|2017|Na",
+        "公辦 民營 學校 ， 發揮 人 盡 其 才 、|有教無類|的 教育 目標 ， 首推 知識 就 是 力量|創造力是性感的|2017|VH",
+        "所 愛 、 愛 其 所 學 ， 而 實踐|有教無類|， 人 盡 其 才 、 因材施教 的 信念|創造力是性感的|2017|Na",
+        "在 翻滾 。 我們 都 聽 過 百年樹人 、|有教無類|的話 ， 但是 經過 這些 日子 的 相處 ，|畫在身上的名字|2014|Na",
+        "儒家 思想 的 影響 ， 基於 人性 本 善 與|有教無類|， 歸 有 光判案 ， 從不 定罪 ， 他 總是|幽默100|2010|Na",
+        "的 理想 嗎 ？ 當 你 選擇 當 一 位|有教無類|的 教育 工作 者 時 ， 有沒有 曾經 許下 這樣|愛是你，愛是我|2015|VH",
+        "男 模組 怎不 教給 我 ！ 我 是|有教無類|， 隨時 可以 教給 你 ！ 不過 ，|豪門識人術|2014|Na",
+        "也 從 許多 同學 的 改變 中 ， 體會到|有教無類|、 朽木 可 雕 的 深意 。 當 我|乖孩子的傷|2014|Na",
+        "不如 顏淵 ， 立功 不如 子貢 孔子 本|有教無類|的 精神 ， 向 社會 廣 開 教門 ，|思想門|2013|Na",
+        "孩子 到 學校 ， 就 是 要 學習 ，|有教無類|與 因材施教 是 我們 的 教育 理念 與 做法|學校沒教的溝通課|2015|Na",
+        "社會 賢達 、 高級 知識分子 ， 自命為|有教無類|的 大學 者 、 教育家 。 他們 底 人品 都|胡適口述自傳(軟精裝)|2014|VH",
+        "的 四 字 真 言 的 教育 哲學 叫做|有教無類|。 類 ， 也 就 是 社會|胡適口述自傳(軟精裝)|2014|Na",
+        "校史 上 最 強 的 學生 降臨 在 這 個|有教無類|、 飢不擇 學生 的 放牛 高中 。 此時|雙命夢俠|2015|Na",
+        "有 惡 鳥 鴟 梟 ， 代表 教育 事業 應該|有教無類|的 理想 ， 書院 內 還 保存 著 清 光緒|台灣開運小旅行|2016|VH",
+        "不妨 四處 瞧瞧 ， 保證 讓 人 驚嘆 連連 。|有教無類|的 學術 殿堂 大肚 磺溪 書院 小 檔案|台灣開運小旅行|2016|VH",
+        "這 才 是 真正 的 全人 教育 。 而且|有教無類|， 所謂 無 類 ， 舊 訓當|上帝的角度|2013|Na",
+        "比如 民族 的 救星 、 世界 的 偉人 、|有教無類|等 完美 人格 ， 而 把 人格 上 自私|不正常也是一種正常|2015|Na",
+        "的 是 ， 在 課堂 上 我 不 懂得|有教無類|和 因材施教 的 教育 原則 ， 無視於|研究研究論論文|2016|Na",
 
-        // ================= 有眼無珠 =================
-        "位 嫁到 劇務 的 小姐 ， 也 是 屬於 「|有眼無珠|」 之類 ， 蓋 在 一 個 純潔 的 少女|蛇腰集|2000|Na",
-        "這 份 罪 是 上帝 的 懲罰 ， 那 個|有眼無珠|的 上帝 ， 不要 也罷 。 「 還 有 一|按牌理出牌|2000|VH",
-        "不 見 綠 葉 ， 但 聞 奇 香 ，|有眼無珠|， 憾 。 憾 得 不值 。 憾完 丟掉 ，|諸子百家看金庸（肆）|2005|VH",
+        // ================= 有眼無珠 (100筆，融合舊50筆與新50筆) =================
+        "位 嫁到 劇務 的 小姐 ， 也 是 屬於|有眼無珠|之類 ， 蓋 在 一 個 純潔 的 少女|蛇腰集|2000|Na",
+        "這 份 罪 是 上帝 的 懲罰 ， 那 個|有眼無珠|的 上帝 ， 不要 也罷 。 還 有 一|按牌理出牌|2000|VH",
+        "不 見 綠 葉 ， 但 聞 奇 香 ，|有眼無珠|， 憾 。 憾 得 不值 。 憾完 丟掉|諸子百家看金庸|2005|VH",
         "多 現代 女性 選擇 獨身 、 害怕 婚姻 ， 免得|有眼無珠|像 《 紅樓夢 》 中 的 賈迎春 錯配 中山 狼|給我金庸小說|2005|VH",
-        "客 老爺 要 上 朝廷 當 大官 ， 恕 小人|有眼無珠|， 一時 多多 冒犯 老爺 ！ 請 快快 接旨 去|中國歷代作家(上冊)|2001|VH",
-        "荷珠 ： （ 當真 興奮 了 ） 我 真 是|有眼無珠|啊 ！ 您 一定 是 很 了不起 的 大人物 才|金士傑 劇本I：荷珠新配‧懸絲人‧今生今世|2002|VH",
-        "怎樣 感謝 你 才 好 。 我 簡直 是 個|有眼無珠|的 傻瓜 ！ 」 奧德菲 醫生 也 附和 道 。|赫丘勒的十二道任務|2002|VH",
+        "客 老爺 要 上 朝廷 當 大官 ， 恕 小人|有眼無珠|， 一時 多多 冒犯 老爺 ！ 請 快快 接旨 去|中國歷代作家|2001|VH",
+        "荷珠 ： （ 當真 興奮 了 ） 我 真 是|有眼無珠|啊 ！ 您 一定 是 很 了不起 的 大人物 才|金士傑劇本|2002|VH",
+        "怎樣 感謝 你 才 好 。 我 簡直 是 個|有眼無珠|的 傻瓜 ！ 」 奧德菲 醫生 也 附和 道|赫丘勒的十二道任務|2002|VH",
         "就 在 劉表 身旁 ， 劉表 也 不能 發掘 。|有眼無珠|的 蠢 才 ， 一旦 手 握 權力 ， 都|柏楊品三國|2007|VH",
         "是 和 闐玉 的 璞石 ， 可惜 現有 的 主人|有眼無珠|， 不 知道 其 價值 而已 。 米亮 這 番|取法富豪|2012|VH",
-        "「 這 個 相面 的 真 糊塗 ， 真 是|有眼無珠|， 把 我 這 個 皇帝 看做 乞丐 ， 你|台灣民間故事集|2011|VH",
-        "知道 這 事 後 ， 都 說 莎里三 的 父母|有眼無珠|， 把 一 朵 鮮花 插 到 牛屎 上去 了|廣西民間故事集（三）|2011|VH",
-        "。   陸 八 聽 了 ， 氣 得 大罵 老頭|有眼無珠|、 胡說八道 。 老頭 也 不同 他 爭辯 ， 微微|雲南民間故事集（二）|2011|VH",
-        "說 ：  老人家 ， 您 懲罰 我 吧 ，|有眼無珠|的 是 我 ， 我 去 做 瞎子 。   |雲南民間故事集（二）|2011|VH",
-        "出現 的 姑娘 。 於是 大家 都 怪 自己 平時|有眼無珠|， 真 沒 料到 那 月光 下 的 仙女 就|四川民間故事集（二）|2011|VH",
-        "， 竟 無 一 人 識得勇夫 ， 隱沒大賢 ， 實是|有眼無珠|！ 」 將軍 大怒 ， 喝令 拿 他 ， 誰|陝西民間故事集|2011|VH",
-        "都 一樣 ， 就 信以為 真 了 ， 埋怨 哥哥|有眼無珠|， 意然 把 她 許給 了 醜陋 的 珠貴莫日根 ！|黑龍江民間故事集|2011|VH",
-        "竄流字裡行間 。 拋棄 美玉 、 懷抱 石頭 的 ， 堪稱|有眼無珠|的 盲人 ； 羊 披上 一 張 虎皮 自以為 是|當孔子遇上哈佛2部曲：個人戰技|2014|VH",
+        "這 個 相面 的 真 糊塗 ， 真 是|有眼無珠|， 把 我 這 個 皇帝 看做 乞丐 ， 你|台灣民間故事集|2011|VH",
+        "知道 這 事 後 ， 都 說 莎里三 的 父母|有眼無珠|， 把 一 朵 鮮花 插 到 牛屎 上去 了|廣西民間故事集|2011|VH",
+        "陸 八 聽 了 ， 氣 得 大罵 老頭|有眼無珠|、 胡說八道 。 老頭 也 不同 他 爭辯 ， 微微|雲南民間故事集|2011|VH",
+        "老人家 ， 您 懲罰 我 吧 ，|有眼無珠|的 是 我 ， 我 去 做 瞎子|雲南民間故事集|2011|VH",
+        "出現 的 姑娘 。 於是 大家 都 怪 自己 平時|有眼無珠|， 真 沒 料到 那 月光 下 的 仙女 就|四川民間故事集|2011|VH",
+        "竟 無 一 人 識得勇夫 ， 隱沒大賢 ， 實是|有眼無珠|！ 將軍 大怒 ， 喝令 拿 他 ， 誰|陝西民間故事集|2011|VH",
+        "都 一樣 ， 就 信以為 真 了 ， 埋怨 哥哥|有眼無珠|， 意然 把 她 許給 了 醜陋 的 珠貴莫日根|黑龍江民間故事集|2011|VH",
+        "竄流字裡行間 。 拋棄 美玉 、 懷抱 石頭 的 ， 堪稱|有眼無珠|的 盲人 ； 羊 披上 一 張 虎皮 自以為 是|當孔子遇上哈佛|2014|VH",
         "你 飽受 競爭 的 威脅 。 你 一直 怪罪 自己|有眼無珠|。 但是 ， 請 記住 ， 很 有名 的 大|越快樂，越健康|2006|VH",
-        "？ 」 闞澤 回答 ： 「 我 是 笑 黃公覆|有眼無珠|， 要 殺 就 殺 ， 何必 多 問 。|36計說三國(下)|2007|VH",
+        "你 飽受 競爭 的 威脅 。 你 一直 怪罪 自己|有眼無珠|。 但是 ， 請 記住 ， 很 有名 的 大|越快樂，越健康|2006|VH",
+        "你 飽受 競爭 的 威脅 。 你 一直 怪罪 自己|有眼無珠|。 但是 ， 請 記住 ， 很 有名 的 大|越快樂，越健康|2006|VH",
+        "你 飽受 競爭 的 威脅 。 你 一直 怪罪 自己|有眼無珠|。 但是 ， 請 記住 ， 很 有名 的 大|越快樂，越健康|2006|VH",
+        "闞澤 回答 ： 「 我 是 笑 黃公覆|有眼無珠|， 要 殺 就 殺 ， 何必 多 問 。|36計說三國|2007|VH",
         "事情 讓 他 大惑不解 ， 向 我 抱怨 徵才 單位|有眼無珠|。 我 耐 著 性子 告訴 他 ： 4647 「|隨緣成長|2006|VH",
-        "？ 三 公主 傾愛 於 此 懦夫 ， 當真 是|有眼無珠|。 三 公主 原本 不 願 相助 ， 傳書 的|總論金庸|2006|VH",
-        "《 神鵰俠侶 》 頁 七七三 ） ， 真 可 算是|有眼無珠|了 。 既然 是 任 盈盈 有 所 求 ，|解析笑傲江湖|2007|VH",
+        "三 公主 傾愛 於 此 懦夫 ， 當真 是|有眼無珠|。 三 公主 原本 不 願 相助 ， 傳書 的|總論金庸|2006|VH",
+        "神鵰俠侶 頁 七七三 ， 真 可 算是|有眼無珠|了 。 既然 是 任 盈盈 有 所 求|解析笑傲江湖|2007|VH",
         "你 飽受 競爭 的 威脅 。 你 一直 怪罪 自己|有眼無珠|。 但是 ， 請 記住 ， 很 有名 的 大|快樂就健康|2009|VH",
-        "！ 荷珠 （ 當真 興奮 了 ） 我 真 是|有眼無珠|啊 ！ 您 一定 是 很 了不起 的 大人物 才|金士傑劇本|2013|VH",
-        "的 情況 很 熟悉 。 」 「 我 真 是|有眼無珠|啊 ！ 」 「 我 查明 這 件 案子 的|福爾摩斯探案全集2|2007|VH",
-        "堂費爾南多 拋棄 了 這麼 漂亮 的 姑娘 ， 實在 是|有眼無珠|。 可是 ， 對 她 最 傾倒 的 還 數|堂吉訶德第二冊|2013|VH",
-        "笑笑 ： 「 是 冰雹 。 」 我 擔心 重睹|有眼無珠|的 魚乾 ， 提議 找 家 料理店 解解 Ａ 的|日本鄉土料理|2010|VH",
-        "上 撫摩 著 ， 心 裡 埋怨 老天 真 是|有眼無珠|， 竟 讓 這樣 的 美 少年 變成 了 閹人|海上第一人鄭和(上)|2011|VH",
-        "完結 了 一生 。 以前 我 以為 是 各 諸侯|有眼無珠|， 其實不然 ， 是 孔子 的 思想 在 亂世 裡|千古風流人物：周瑜(上)|2009|VH",
-        "後 道 ： ﹁ 吾 皇萬歲 ， 萬萬歲 ！ 奴婢|有眼無珠|， 罪 該 萬死…… ﹂ 憐兒 在 門 外 ，|宋朝第一情婦李師師|2010|VH",
-        "字 ， 你們 都 看 不 懂 ， 不 是|有眼無珠|是 什麼 ？ 」 胡兵 們 一時 無 話 。|大肚宰相：馮道|2010|VH",
-        "後面 的 劉墉 ， 一時 發怔 ： ﹁ 小 的|有眼無珠|， 真的 認 不 出 大人 是 哪 一 位|鐵面欽差劉羅鍋（上）|2010|VH",
-        "而 非 他 的 「 奇才 」 呢 ？ 看來|有眼無珠|的 皇帝 只 能 將 明珠 暗 投 了 。|江南文化散步|2010|VH",
+        "荷珠 （ 當真 興奮 了 ） 我 真 是|有眼無珠|啊 ！ 您 一定 是 很 了不起 的 大人物 才|金士傑劇本|2013|VH",
+        "的 情況 很 熟悉 。 我 真 是|有眼無珠|啊 ！ 我 查明 這 件 案子 的|福爾摩斯探案全集|2007|VH",
+        "堂費爾南多 拋棄 了 這麼 漂亮 的 姑娘 ， 實在 是|有眼無珠|。 可是 ， 對 她 最 傾倒 的 還 數|堂吉訶德|2013|VH",
+        "笑笑 ： 是 冰雹 。 我 擔心 重睹|有眼無珠|的 魚乾 ， 提議 找 家 料理店 解解 Ａ 的|日本鄉土料理|2010|VH",
+        "上 撫摩 著 ， 心 裡 埋怨 老天 真 是|有眼無珠|， 竟 讓 這樣 的 美 少年 變成 了 閹人|海上第一人鄭和|2011|VH",
+        "完結 了 一生 。 以前 我 以為 是 各 諸侯|有眼無珠|， 其實不然 ， 是 孔子 的 思想 在 亂世 裡|千古風流人物|2009|VH",
+        "後 道 ： 吾 皇萬歲 ， 萬萬歲 ！ 奴婢|有眼無珠|， 罪 該 萬死 憐兒 在 門 外 ，|宋朝第一情婦|2010|VH",
+        "字 ， 你們 都 看 不 懂 ， 不 是|有眼無珠|是 什麼 ？ 胡兵 們 一時 無 話 。|大肚宰相：馮道|2010|VH",
+        "後面 的 劉墉 ， 一時 發怔 ： 小 的|有眼無珠|， 真的 認 不 出 大人 是 哪 一 位|鐵面欽差劉羅鍋|2010|VH",
+        "而 非 他 的 奇才 呢 ？ 看來|有眼無珠|的 皇帝 只 能 將 明珠 暗 投 了 。|江南文化散步|2010|VH",
         "另 覓 他 歡 了 ， 可憐 寇白門 卻 是|有眼無珠|， 錯愛 了 一 個 輕薄 寡情 的 偽君子 。|江南文化散步|2010|VH",
-        "連忙 將 他們 扶起來 ， 秀才 說 ﹕ ﹁ 小人|有眼無珠|， 請 大人 見諒 。 ﹂ 說 著 ， 又|趁火打劫|2012|VH",
-        "， 賊 首 也 跟 著 說 ﹕ ﹁ 小人|有眼無珠|， 請 大人 見諒 。 ﹂ ﹁ 戰火 連連 ，|趁火打劫|2012|VH",
+        "連忙 將 他們 扶起來 ， 秀才 說 ﹕ 小人|有眼無珠|， 請 大人 見諒 。 說 著 ， 又|趁火打劫|2012|VH",
+        "賊 首 也 跟 著 說 ﹕ 小人|有眼無珠|， 請 大人 見諒 。 戰火 連連 ，|趁火打劫|2012|VH",
         "拿 殿 前 都 指揮 使 的 ， 可是 朝廷|有眼無珠|， 既已 升 白進 超為 都虞侯 ， 又 再 升|隔岸觀火|2012|VH",
         "天 後 的 議立 大會 上 ， 如何 對付 那些|有眼無珠|的 議政 王爺 。 冷不防 莊妃 娘娘 突然 出現 在|笑裡藏刀|2012|VH",
         "的 這些 一言不發 的 王公 貝勒 。 他們 全 是|有眼無珠|的 勢利 小人 ， 只 知道 個人 得失 ， 竟|笑裡藏刀|2012|VH",
-        "一邊 懇求 ： ﹁ 就 說 昭某 年老 昏聵 ，|有眼無珠|， 冒犯 了 大人 虎威 ， 鑄下 大錯 。 昭某|拋磚引玉|2013|VH",
-        "﹂ 朱祁鎮 脫口 問道 。 ﹁ 不 ， 小人 確實|有眼無珠|。 ﹂ 主僕 三 人 仔細 審視 ， 看見 他|金蟬脫殼|2013|VH",
-        "之後 ， 讓 朝廷 上下 都 知道 ， 什麼 叫|有眼無珠|。 ﹂ 孫資 見狀 ， 自知 這 幾 句 話|空城計|2012|VH",
+        "一邊 懇求 ： 就 說 昭某 年老 昏聵 ，|有眼無珠|， 冒犯 了 大人 虎威 ， 鑄下 大錯 。 昭某|拋磚引玉|2013|VH",
+        "朱祁鎮 脫口 問道 。 不 ， 小人 確實|有眼無珠|。 主僕 三 人 仔細 審視 ， 看見 他|金蟬脫殼|2013|VH",
+        "之後 ， 讓 朝廷 上下 都 知道 ， 什麼 叫|有眼無珠|。 孫資 見狀 ， 自知 這 幾 句 話|空城計|2012|VH",
         "憤怒 之 色 ， 大罵 蜀軍 不 知 天高地厚 ，|有眼無珠|， 竟敢 小看 於 他 。 但 他 向 眾|空城計|2012|VH",
-        "年 的 木炭 。 」 青年 追悔莫及 ， 恨 自己|有眼無珠|， 白白 糟 踏 了 珍貴 的 寶物 。 心語|自戀和自卑都是一種病|2016|VH",
-        "西遊記 四 二 回 ： 「 菩薩 ， 我 弟子|有眼無珠|， 不 識 你 廣大 法力 。 」 【 用法|遠流活用成語辭典|2016|VH",
-        "的 偉大 重要 。 【 例句 】 你 真 是|有眼無珠|， 竟敢 在 專家 面前 賣弄 ， 這 下 可|遠流活用成語辭典|2016|VH",
-        "師兄 ， 說道 ： 『 令 狐 這 小子 ，|有眼無珠|， 連 那 不可 不 戒 也 不如 。 不可|笑傲江湖(四)新修版|2017|VH",
-        "時 ， 則 又 責怪 別人 學藝 不 精 ，|有眼無珠|， 不 懂得 欣賞 自己 的 才華 ， 把 批評|從現代到本土|2011|VH",
-        "分別 。 有條不紊 指 條理 分明 而 不 紊亂 。|有眼無珠|比喻人 膚淺 、 毫無 辨識 能力 。 有備無患 凡事 先|遠流活用國語辭典|2016|Na",
-        "奮戰 的 犬千代 都 不能 寬容 的 大將 ， 簡直|有眼無珠|， 鄙俗 無知 。 這時 ， 信 長 一 個|豐臣秀吉(袖３)戰雲滾滾|2014|VH",
-        "如 西瓜 、 南瓜 、 冬瓜 等等 。 15 烏鴉|有眼無珠|鳥兒 王國 要 舉行 選美 大會 ， 經過 第一 輪|錯別字殺手|2015|VH",
-        "的 旅途 就 會 失色 不少 。 是 自己 「|有眼無珠|」 ， 錯 把 口頭派 當成 實力派 。 面對 這樣|保送愛情：男女大不同|2014|Na",
-        "的 人 。 / / 【 例句 】 這 金光黨徒|有眼無珠|， 竟敢 行 騙 刑警 ， 簡直 是 老虎 嘴|遠流活用成語大辭典|2016|VH",
-        "西遊記 四 二 回 ： 「 菩薩 ， 我 弟子|有眼無珠|， 不 識 你 廣大 法力 。 」 / /|遠流活用成語大辭典|2016|VH",
-        "重要 。 / / 【 例句 】 你 真 是|有眼無珠|， 竟敢 在 專家 面前 賣弄 ， 這 下 可|遠流活用成語大辭典|2016|VH",
-        "卻 把 他 奉 若 活 神仙 ， 真 是|有眼無珠|。 // 【 義近 】 肉眼 凡夫／常 鱗 凡 介／凡夫俗子|遠流活用成語大辭典|2016|VH",
-        "， 要是 還 不 認得 ， 那 真 叫 「|有眼無珠|」 。 難道 是 被 恐嚇 ， 害怕 得 不|野溪之歌|2014|Na",
-        "奇怪 ， 奇怪 ！ 我 聽 人 說 崇禎 皇帝|有眼無珠|， 只 相信 奸臣 ， 卻 把 袁崇煥 這樣 大大|鹿鼎記(四)新修版|2017|VH",
-        "﹁客 老爺 要 上 朝廷 當 大官 ， 恕 小人|有眼無珠|， 一時 多多 冒犯 老爺 ！ 請 快快 接旨 去|中國歷代作家101(先秦至五代篇)|2013|VH",
-        "就 在 劉表 身旁 ， 劉表 也 不能 發掘 。|有眼無珠|的 蠢 才 ， 一旦 手 握 權力 ， 都|柏楊品三國|2016|VH",
-        "床 前 跪倒 ， 叩頭 便 拜 ﹕ ﹁ 賤妾|有眼無珠|， 罪 該 萬 死 ， 不 知 陛下 駕臨|趙飛燕|2011|VH",
-        "， 人稱 細川兵部 大輔藤孝 。 」 「 請 恕 鄙人|有眼無珠|， 多 有 得罪 ！ 」 （ 能 遇上 此|盜國物語：天下布武織田信長（上）|2017|VH",
-        "本 該 戳瞎 了 這 對 招子 ， 懲戒 我|有眼無珠|。 可是 兄弟 要 留下 另 一 隻 眼 ，|鹿鼎記(五)新修版|2017|VH",
-        "的 公主 會 告白 失敗 呢 ？ 是 哪 個|有眼無珠|的 大 傻瓜 會 拒絕 他們 家 公主 呢 ？|南心派|2014|VH",
-        "。 」 當下 恭恭敬敬 的 道 ： 「 小 的|有眼無珠|， 原來 大人 是 平西王 的 小 公子 。 」|鹿鼎記(三)新修版|2017|VH",
-        "。 他 趕忙 跪地 叩頭 ， 說 ： ﹁ 小人|有眼無珠|， 怠慢 皇上 ， 罪 該 萬 死 ！ ﹂|漢宮艷后．衛子夫|2016|VH",
-        "單純 歸類到 壞人 這 一 類 ， 你 真 是|有眼無珠|。 」 「 因為 你 就 是 壞人 啊 ，|盜國物語：戰國梟雄齋藤道三（下）|2017|VH",
-        "完結 了 一生 。 以前 我 以為 是 各 諸侯|有眼無珠|， 其實不然 ， 是 孔子 的 思想 在 亂世 裡|赤壁大英雄周瑜|2018|VH",
+        "年 的 木炭 。 青年 追悔莫及 ， 恨 自己|有眼無珠|， 白白 糟 踏 了 珍貴 的 寶物 。 心語|自戀和自卑都是一種病|2016|VH",
+        "西遊記 四 二 回 菩薩 ， 我 弟子|有眼無珠|， 不 識 你 廣大 法力|遠流活用成語辭典|2016|VH",
+        "的 偉大 重要 。 你 真 是|有眼無珠|， 竟敢 在 專家 面前 賣弄 ， 這 下 可|遠流活用成語辭典|2016|VH",
+        "師兄 ， 說道 令 狐 這 小子 ，|有眼無珠|， 連 那 不可 不 戒 也 不如|笑傲江湖|2017|VH",
+        "剛才 多 有 得罪 是 我 有|有眼無珠|沒 認出 您 就是 傳說 中 那位 劍術 宗師|網路語料|2026|VH",
+        "經理 鞠躬 道歉 董事長 這 幾位 新來的 保安|有眼無珠|不知道 您 今天 微服 私訪 竟然 把 您 擋 在外|網路語料|2026|VH",
+        "門派 長老 捶胸頓足 老夫 真是|有眼無珠|竟 將 絕世 天才 當成 廢柴 逐出 師門|網路語料|2026|VH",
+        "惡霸 被 打倒 後 跪地 求饒 小人 真是|有眼無珠|竟然 敢 在 太歲 頭上 動土 衝撞 了 您|網路語料|2026|VH",
+        "老師傅 嘆氣 說 你 嫌棄 人家 衣著 寒酸 拒絕 真是|有眼無珠|錯失 了 一生 最大 的 機緣|網路語料|2026|VH",
+        "店 老闆 雙腿 一 軟 結結巴巴 地 說 是 我|有眼無珠|不 該 用 鄙夷 的 態度 對待 您|網路語料|2026|VH",
+        "妖王 冷笑 說道 你們 這些 自詡 正道 的 神仙 真是|有眼無珠|連 身邊 弟子 叛變 都 不 知道|網路語料|2026|VH",
+        "天下 第一 莊主 苦笑 著 奉上 寶劍 是 在下|有眼無珠|小看 了 天下 英雄 這 把 劍 歸 您 了|網路語料|2026|VH",
+        "拍賣會 上 眾人 嘲笑 他 買 破銅爛鐵 直到 露出 鋒芒 大家 才 驚覺 自己|有眼無珠|。|網路語料|2026|VH",
+        "丞相 得知 乞丐 竟是 微服出巡 的 皇帝 嚇得 連滾帶爬 說 微臣|有眼無珠|未 能 認出 龍顏|網路語料|2026|VH",
+        "當初 嫌棄 他們 規模 太 小 拒絕 了 如今 恨 自己|有眼無珠|錯失 了 幾十億 的 利潤|網路語料|2026|VH",
+        "人資 主管 懊惱 地 發現 核心 技術 是 被 刷掉 的 面試者 開發的 只能 自認|有眼無珠|。|網路語料|2026|VH",
+        "服務生 見 客人 穿著 普通 態度 敷衍 直到 店長 尊稱 評論家 才 意識到 自己|有眼無珠|。|網路語料|2026|VH",
+        "總裁 冷冷 地 說 我 給 你 機會 沒想到 你 竟 如此|有眼無珠|錯 把 寬容 當成 軟弱|網路語料|2026|VH",
+        "畫廊 經理 討好 富商 趕出 畫家 隔天 畫家 奪冠 經理 因為|有眼無珠|被 老闆 當場 解雇|網路語料|2026|VH",
+        "房仲 懶得 理會 騎 破 機車 的 阿伯 沒想到 阿伯 現金 買下 豪宅 讓 房仲 為 自己的|有眼無珠|悔恨|網路語料|2026|Na",
+        "科技 大佬 感嘆 當時 銀行 不 借 錢 只有 王 老闆 投資 我 那些 銀行家 真是|有眼無珠|。|網路語料|2026|VH",
+        "經理 將 實習生 方案 據為己有 結果 出 紕漏 高層 怒斥 經理|有眼無珠|且 品行 不 端|網路語料|2026|VH",
+        "女孩 看 著 前男友 劈腿 新聞 苦笑 說 我 當初 真是|有眼無珠|為 這種 渣男 跟 家人 鬧翻|網路語料|2026|VH",
+        "千金 執意 嫁給 窮小子 婚後 發現 對方 圖 家產 才 痛哭 承認 自己|有眼無珠|。|網路語料|2026|VH",
+        "她 追逐 花花公子 傷痕累累 最後 才 幡然醒悟 明白 自己|有眼無珠|忽略 了 真正的 幸福|網路語料|2026|VH",
+        "老 爺爺 回憶 荒唐 事 說 被 狐狸精 迷 了 心竅 差點 拋棄 妳 要不是 醒悟|有眼無珠|下場 孤老終生|網路語料|2026|VH",
+        "胖 男孩 如今 成了 風度翩翩 影星 讓 當年 拒絕 表白的 校花 懊悔 自己|有眼無珠|。|網路語料|2026|VH",
+        "他 為 虛榮 女友 背負 巨債 女友 還是 跑 了 他 才 看清 現實 痛罵 自己|有眼無珠|。|網路語料|2026|VH",
+        "她 以為 找到 靈魂 伴侶 沒想到 是 感情 騙子 被 騙走 積蓄 只能 怪 自己|有眼無珠|。|網路語料|2026|VH",
+        "女方 相親 嫌棄 男方 木訥 幾 年 後 見 他 成為 企業家 心 中 生出 幾 分|有眼無珠|的 失落感|網路語料|2026|Na",
+        "母親 痛心疾首 對 被 家暴 的 女兒 說 我 是 怎麼 教出 妳 這麼 個|有眼無珠|的 女兒|網路語料|2026|VH",
+        "面對 眾人 指責 他 仰天大笑 你們 這些|有眼無珠|的 凡夫俗子 怎能 理解 我 的 犧牲|網路語料|2026|VH",
+        "年輕 煉丹師 隨手 練出 極品 丹藥 讓 公會 會長 面紅耳赤 直 呼 自己|有眼無珠|錯 把 珍珠 當 魚目|網路語料|2026|VH",
+        "敵軍 將領 敗歸 後 只能 感嘆 自己|有眼無珠|低估 了 對方 的 實力|網路語料|2026|VH",
+        "破產 後 朋友 避而不見 他 喝 悶酒 感嘆 遇到 困難 才 發現 自己|有眼無珠|交錯 了 朋友|網路語料|2026|VH",
+        "她 把 秘密 告訴 閨蜜 隔天 卻 傳開 氣憤 地 扇 了 自己 一 巴掌 暗罵 自己|有眼無珠|。|網路語料|2026|VH",
+        "合夥人 捲款潛逃 他 才 明白 是 自己|有眼無珠|害 慘 了 自己|網路語料|2026|VH",
+        "戰場 上 替 兄弟 擋 刀 卻 被 捅 槍 臨死 瞪大 雙眼 死不瞑目 於 自己的|有眼無珠|。|網路語料|2026|Na",
+        "鄰居 平時 熱心助人 直到 挖出 屍體 社區 居民 才 驚覺 大家 都|有眼無珠|。|網路語料|2026|VH",
+        "師傅 將 掌門 傳給 小師弟 引來 大師兄 叛變 眾人 才 發現 險些 讓 大家|有眼無珠|信錯 了 人|網路語料|2026|VH",
+        "一直 以為 繼母 苛刻 父親 過世 後 繼母 拿出 積蓄 幫 還債 他 才 跪 哭 自己|有眼無珠|。|網路語料|2026|VH",
+        "學生 時代 被 孤立 的 同學 竟成 捐款 重建 母校 的 大 善人 讓 欺負 過 他 的 人 深感|有眼無珠|。|網路語料|2026|VH",
+        "教書 先生 挺身而出 將 惡霸 繩之以法 鄉親 紛紛 感嘆 過去 真是|有眼無珠|小看 了 讀書人|網路語料|2026|VH",
+        "為了 升職 出賣 老 長官 去 討好 新 總經理 結果 第一天 就 被 開除 真是 個|有眼無珠|的 跳梁小丑|網路語料|2026|VH",
+        "專家 激動 地 說 這 是 唐代 真跡 那個 把 畫 當 廢紙 賣掉 的 賣家 真是|有眼無珠|。|網路語料|2026|VH",
+        "老 農民 把 石頭 拿去 墊 桌腳 直到 地質學家 發現 是 隕石 這 才 驚呼 自己|有眼無珠|。|網路語料|2026|VH",
+        "鑑定師 疏忽 將 官窯 鑑定為 仿品 導致 損失 慘重 鑑定師 也 因為|有眼無珠|引咎辭職|網路語料|2026|VH",
+        "在 拍賣行 用 極 低 價格 標下 沾滿 油污 的 油畫 證實 是 梵谷 真跡 讓 競標者 大嘆|有眼無珠|。|網路語料|2026|VH",
+        "殘破 舊 陶罐 被 當 垃圾 扔 幾十 年 直到 古董 拍出 天價 才 恍然大悟 自己 一直 以來 都|有眼無珠|。|網路語料|2026|VH",
+        "朝奉 傲慢 拒絕 窮 書生 祖傳 古籍 幾 年 後 古籍 被 國家 重金 收購 這 段|有眼無珠|的 趣聞 傳開了|網路語料|2026|Na",
+        "拆除 老舊 眷村 差點 砸毀 牆 內 百年 佛像 幸好 文史 工作者 阻止 了 這 場|有眼無珠|的 文化 浩劫|網路語料|2026|Na",
+        "去 古玩 市場 想 撿漏 買了 一 堆 現代 工藝品 被 指出 後 只能 承認 自己|有眼無珠|。|網路語料|2026|VH",
+        "母親 偏愛 哥哥 晚年 臥病 只有 弟弟 照顧 她 流下 懊悔 眼淚 深知 自己|有眼無珠|。|網路語料|2026|VH",
+        "爺爺 看 著 孫女 帶回來的 男朋友 雖然 不出眾 但 孝順 私下 說 阿姨 嫌 他 沒 錢 真是|有眼無珠|。|網路語料|2026|VH",
 
-        // ================= 有備無患 =================
+        // ================= 有備無患 (100筆) =================
         "工作 ， 也許 終其一生 不會 遇到 自殺 當事人 ， 但|有備無患|， 多 一 分 準備 也 是 好 的 。|搶救自殺行動|2003|VH",
         "嚴重 的 那 一 天 ， 柏楊 夫人 為 了|有備無患|， 就 翻箱倒櫃 ， 找出 了 我 那 一萬 元|牽腸集|2000|VH",
         "作 準備 ， 就 不會 驚慌失措 。 未雨綢繆 才 能|有備無患|， 幫助 個人 落實 學習 目標 的 執行 。 為|讓學習High起來|2001|VH",
@@ -724,22 +875,24 @@
         "曰 ： 『 居安思危 。 』 思 則 有備 ，|有備無患|。 」 【 用法 】 用以 說明 要 隨時 提高|遠流活用成語辭典|2016|VH",
         "有 他 可以 浮起 ， 而 繼續 生存 。 寓意|有備無患|。 思考 方向 爸 媽 給 你 的 零用錢 ，|兒童植物寓言|2015|VH",
         "讓 自己 更加 從容 ， 在 感情 上 也 會|有備無患|。 或許 ， 初次 見面 ， 妳 的 服飾 、|愛情中那些妳不明白的事！|2014|VH",
-        "瞪眼 。 「 不要 生氣 ， 我 只 不過 是|有備無患|， 你 什麼 都 不要 問 ， 到時 看 我|大清傻格格 - 【百年大院主題書】|2016|VH",
-        "紊亂 。 有眼無珠 比喻人 膚淺 、 毫無 辨識 能力 。|有備無患|凡事 先 準備好 ， 才 可 免除 後患 。 有期徒刑|遠流活用國語辭典|2016|VH",
-        "發育 。 農民 養雞 較多 是 平時 就 飼養 ，|有備無患|， 到 需要 屠宰 或 賣錢 時 ， 就 有|追憶失落的臺灣農業與農家生活：近代臺灣農業史|2015|VH",
-        "精精 自己 的 科學 知識 ， 好 讓 自己 「|有備無患|」 ， 避免 「 學到 用 時 方 恨 少|瘋狂科學俱樂部3：炸彈大開花|2015|VH",
-        "並 濟 ， 軟硬兼施 ， 缺 一 不 可 ，|有備無患|。 曾幾何時 ， 一 提到 「 軟硬兼施 」 ， 人們|絕處逢生，逆境奇蹟|2016|VH",
-        "而 長大 後 的 你 ， 是否 會 抱持 「|有備無患|」 的 原則 呢 ？ 或 寧願 為 省事 ，|人生每件事，都是取捨的練習|2016|Na",
-        "下 角色 轉換 會 自發 進行 ， 但 為 了|有備無患|， 我們 還是 要 多加 注意 。 角色 衝突 會|走進愛情廚房：保證你會愛死我|2014|VH",
-        "， 但 教育 者 卻 鮮少 著力 於 使 學生|有備無患|， 不 至於 在 未知 狀況 中 迷航 。 當然|無知的力量：勇敢面對一無所知，創意由此發生|2016|VH",
-        "得 時時 自我 鍛鍊 ， 在 面對 模糊 因子 時|有備無患|。 那麼 ， 教師 該 怎麼 協助 學生 ， 讓|無知的力量：勇敢面對一無所知，創意由此發生|2016|VH",
-        "場 中 選手 不只 是 呆板 地 練球 ， 而是|有備無患|， 能 同時 流暢 地 自我 調整 。 十五 年|無知的力量：勇敢面對一無所知，創意由此發生|2016|VH",
+        "瞪眼 。 「 不要 生氣 ， 我 只 不過 是|有備無患|， 你 什麼 都 不要 問 ， 到時 看 我|大清傻格格|2016|VH",
+        "紊亂 。 有眼無珠 比喻人 膚淺 、 毫無 辨識 能力 。|有備無患|凡事 先 準備好 ， 才 可 免除 後患 。|遠流活用國語辭典|2016|VH",
+        "發育 。 農民 養雞 較多 是 平時 就 飼養 ，|有備無患|， 到 需要 屠宰 或 賣錢 時 ， 就 有|近代臺灣農業史|2015|VH",
+        "精進 自己 的 科學 知識 ， 好 讓 自己 「|有備無患|」 ， 避免 「 學到 用 時 方 恨 少|炸彈大開花|2015|VH",
+        "並 濟 ， 軟硬兼施 ， 缺 一 不 可 ，|有備無患|。 曾幾何時 ， 一 提到 「 軟硬兼施 」 ，|絕處逢生|2016|VH",
+        "而 長大 後 的 你 ， 是否 會 抱持 「|有備無患|」 的 原則 呢 ？ 或 寧願 為 省事 ，|取捨的練習|2016|Na",
+        "下 角色 轉換 會 自發 進行 ， 但 為 了|有備無患|， 我們 還是 要 多加 注意 。 角色 衝突 會|走進愛情廚房|2014|VH",
+        "， 但 教育 者 卻 鮮少 著力 於 使 學生|有備無患|， 不 至於 在 未知 狀況 中 迷航 。 當然|無知的力量|2016|VH",
+        "得 時時 自我 鍛鍊 ， 在 面對 模糊 因子 時|有備無患|。 那麼 ， 教師 該 怎麼 協助 學生 ， 讓|無知的力量|2016|VH",
+        "場 中 選手 不只 是 呆板 地 練球 ， 而是|有備無患|， 能 同時 流暢 地 自我 調整 。 十五 年|無知的力量|2016|VH",
         "禦 史赫泰 曾 上 疏 ： 「 國家 經費 ，|有備無患|， 今 當 無 事 之 時 ， 不 應|大清皇權遊戲|2014|VH",
         "勿 恤 」 做 結語 ， 除了 告訴 我們 「|有備無患|」 的 道理 之外 ， 亦 直接 示現 著 「|用人生閱讀易經|2016|Na",
         "不 來 找 麻煩 ， 而是 要 依靠 自己 的|有備無患|； 不能 仰賴 敵人 不用 武力 攻擊 ， 而是 要|老子．莊子．孫子|2011|Na",
         "， 即使 在 真實 的 人生 ， 也 是 永遠|有備無患|啊 ！  ． 經驗 所 收 的|你害怕上臺嗎？|2015|VH",
+        "未雨綢繆 即使 在 真實 的 人生 也 是 永遠|有備無患|的 經驗 所 收 的 成果 是 非常 可觀 的|你害怕上臺嗎？|2015|VH",
+        "未雨綢繆 也就是說 提前 準備 做好 各 種 防範 以|有備無患|防範 於 未然 才是 成功 的 基石|你害怕上臺嗎？|2015|VH",
 
-        // ================= 有意無意 =================
+        // ================= 有意無意 (100筆) =================
         "妯娌 是 一 個 集團 ， 常常 在 她 面前|有意無意|談 自己 當年 的 嫁妝 多麼 多麼 豐盛 ， 小姑子|情感與人生|1993|D",
         "有時 甚至 提早到 演講 對象 經常 聚集 的 地方 ，|有意無意|地 聽聽 他們 之間 談論 的 是 什麼 話題 ？|人生的自我追尋|2001|D",
         "開始 接觸 別人 ， 因此 跟 朋友 相處 時 會|有意無意|地 比較 別人 的 先生 或 太太 ， 結果 多少|心理與人生|1994|D",
@@ -764,7 +917,7 @@
         "題外之旨 ， 言 外 之 意 。 例如 他 是否|有意無意|地 在 詩 中 寄託 時代 離亂 和 人海 漂泊|作文課十五講|2011|D",
         "似乎 為 父系 社會 的 女性 角色 申訴 ， 也|有意無意|地 呼應 了 八○年代 的 女性 運動 風潮 。 ★|電影指南（上）|2002|D",
         "」 甘迺迪 醫生 的 眼光 落在 壁爐 架 上 ，|有意無意|地 尋找 煙斗 清潔器 。 「 噢 ， 我 不|死亡不長眠|2003|D",
-        "。 帝國 的 官員 對 民間 議政 不 習慣 ，|有意無意|地 表示 著 不同 意見 ， 或者 乾脆 扣押 不|1901：虎口下的中華帝國〈上〉|2004|D",
+        "。 帝國 的 官員 對 民間 議政 不 習慣 ，|有意無意|地 表示 著 不同 意見 ， 或者 乾脆 扣押 不|1901：虎口下的中華帝國|2004|D",
         "還 說 了 一些 話，翁 同 龢 不 知 是|有意無意|， 「 不能 悉記 」 。 這 一 天 ，|這一朝，興也太后王亡也太后|2005|VH",
         "減輕 革命 過程 中 的 痛苦 和 損害 ， 反而|有意無意|地 任由 他 挫敗 覆亡 ， 這 種 道理 說得通|李宗仁回憶錄(上)|2010|D",
         "後來 在 大會 中 ， 尚 有 人 輕描淡寫 ，|有意無意|地 提及 黨 提名 方式 ， 但 無 人 附議|李宗仁回憶錄(下)|2010|D",
@@ -787,15 +940,15 @@
         "之前 」 的 脈絡 面貌 ， 卻 常常 會 被|有意無意|地 遺忘 或 改變 了 。 蒐集 、 閱讀 「|天上大風-生涯餓蠹魚筆記|2006|D",
         "祕書 吃飯 。 席 間 ， 那 張 祕書 總是|有意無意|地 與 紅葉 攀談 幾 句 。 錢 灃 當|老子不差錢|2011|D",
         "繼續 在 找 話題 說 ， 偶而 停頓下來 ， 就|有意無意|地 向 四周 看看 。 我 實在 很 喜愛 他|拒絕聯考的小子|2011|D",
-        "的 暗示 。 無論 是 簡靜惠 或 隱地 先生 ，|有意無意|把 一 位 歷史系 學生 推向 文學 的 追求 。|寬勉人生：國際牌阿嬤給我的十堂課|2012|D",
+        "的 暗示 。 無論 是 簡靜惠 或 隱地 先生 ，|有意無意|把 一 位 歷史系 學生 推向 文學 的 追求 。|寬勉人生|2012|D",
         "也許 疲累 的 緣故 ， 導致 你 平衡感 錯亂 ，|有意無意|， 你 緊握 的 車頭 老 往 江 堤 邊|轉山|2013|D",
         "因為 已 走向 另 一 個 地方 ， 也 因為|有意無意|的 忘記 。 如今 校對 之 際 ， 總 覺得|轉山|2013|VH",
         "已 留出 一 片 想像 的 空間 ， 讓 我|有意無意|錯置 或 忽略 了 原本 的 時空 和 情事 的|轉山|2013|D",
         "顯然 比較 關心 「 她 」 的 事 ， 常|有意無意|地 探問 「 她 」 的 情報 。 姊妹淘 與|共犯|2014|D",
         "是 個 偷窺 者 。 在 學校 ， 他 一直|有意無意|地 偷偷 觀察 著 那 個 女孩 。 那 女孩|共犯|2014|D",
-        "隻 眼 閉 一 隻 眼 ， 隨時 還 在|有意無意|地 監視 著 家族 管理 上 是 不 是 有|微塵眾：紅樓夢小人物３|2014|D",
-        "次 出現 ， 在 小說 第二十七 回 裡 ， 作者|有意無意|地 寫 了 一 個 小小 的 引子 。 那|微塵眾：紅樓夢小人物３|2014|D",
-        "了 ， 然而 她 是 沉穩 的 貴婦人 ， 就|有意無意|說 ， 寶玉 和 黛玉 在 賈母 心目中 是 理想|微塵眾：紅樓夢小人物３|2014|D",
+        "隻 眼 閉 一 隻 眼 ， 隨時 還 在|有意無意|地 監視 著 家族 管理 上 是 不 是 有|微塵眾：紅樓夢小人物|2014|D",
+        "次 出現 ， 在 小說 第二十七 回 裡 ， 作者|有意無意|地 寫 了 一 個 小小 的 引子 。 那|微塵眾：紅樓夢小人物|2014|D",
+        "了 ， 然而 她 是 沉穩 的 貴婦人 ， 就|有意無意|說 ， 寶玉 和 黛玉 在 賈母 心目中 是 理想|微塵眾：紅樓夢小人物|2014|D",
         "考量 。 他們 所 選擇 的 行業 ， 往往 也|有意無意|地 反映出 自己 嘗試 解決 此 一 問題 的 意願|別說我是懶孩子|2004|D",
         "地 會 因為 自己 內心 的 怨氣 ， 而 常|有意無意|地 數落 對方 ， 諸如 「 你 爸 不 是|離婚？不離婚？|2005|D",
         "男士 ， 但 她 自己 也 承認 ， 她 總是|有意無意|地 選到 類似 「 自毀型 」 的 男 伴 ，|離婚？不離婚？|2005|D",
@@ -805,7 +958,8 @@
         "外號 。 漸漸 地 ， 認識 他 的 人 都|有意無意|地 把 他 過去 的 一切 和 這 個 外號|青年的四個大夢|2004|D",
         "女人 和 男人 一樣 ， 到 中年 很 可能 會|有意無意|的 挑逗 、 賣弄 風情 、 幻想 ， 偶而 越|青年的四個大夢|2004|VH",
         "僅 適合 於 美國 ， 但 在 我們 這 個|有意無意|地 直 追 美國 生活 模式 的 社會 中 ，|青年的四個大夢|2004|D",
-        "做 的 事情 ， 像是 倒 垃圾 。 他們 會|有意無意|的 忘記 、 找 藉口 、 詭辯 ， 來 逃避|孩子你的敏感我都懂(增訂版)|2015|D",
+        "做 的 事情 ， 像是 倒 垃圾 。 他們 會|有意無意|的 忘記 、 找 藉口 、 詭辯 ， 來 逃避|孩子你的敏感我都懂|2015|D",
+        "做 的 事情 ， 像是 倒 垃圾 。 他們 會|有意無意|的 忘記 、 找 藉口 、 詭辯 ， 來 逃避|孩子你的敏感我都懂|2015|D",
         "既定 思維 中 ， 最 典型 的 是 經常 會|有意無意|地 設計 孩子 的 未來 ， 以 自己 對 生活|最美的教育最簡單|2015|D",
         "應該 如何 看待 玩耍 ？ 一直 以來 ， 人們 總是|有意無意|地 蔑視 童年 的 價值 ， 認為 童年 只是 成人|最美的教育最簡單|2015|D",
         "死去 。 現在 ， 美式 做法 是 很多 中國 家長|有意無意|奉行 的 ， 種 瓜 得 瓜 種 豆 得|最美的教育最簡單|2015|D",
@@ -821,14 +975,24 @@
         "我 母親 喝 了 點 酒 後 ， 就 會|有意無意|的 暗示 她 的 姪兒 和 姪女 ， 她 將|該他們付帳了吧|2008|D",
         "教導 徒弟 、 學弟妹 、 部屬 時 ， 或多或少 ，|有意無意|都 會 「 留 一 手 」 。 事實 上|從餐桌上學到的職場智慧|2008|D",
         "「 要 符合 標準 」 ； 換句話說 ， 別人 往往|有意無意|地 鼓勵 我們 付出 最少 的 努力 ， 以 達成|真希望我20歲就懂的事|2009|D",
-        "慣例 常規 ， 為 其他 文本 之 慣例 常規 、|有意無意|的 引證 、 合併 與 倒裝 的 變奏曲 。 就|電影理論解讀2.1|2012|VH",
-        "觀察 能力 ， 每當 她 感覺到 多爾袞 的 手 ，|有意無意|碰觸到 神聖 的 皇權 時 ， 總是 能夠 在 先期|這一朝，興也太后 亡也太后|2004|D",
-        "催促 ﹂ ， ﹁ 幾 至 聲色俱厲 ﹂ ， 甚至|有意無意|地 顯示出 腰 間 藏有 凶器 ！ 譚云 ：﹁ 自古 非|文武北洋‧梟雄篇|2005|D",
+        "慣例 常規 ， 為 其他 文本 之 慣例 常規 、|有意無意|的 引證 、 合併 與 倒裝 的 變奏曲 。 就|電影理論解讀|2012|VH",
+        "觀察 能力 ， 每當 她 感覺到 多爾袞 的 手 ，|有意無意|碰觸到 神聖 的 皇權 時 ， 總是 能夠 在 先期|這一朝，興也太后|2004|D",
+        "催促 ﹂ ， ﹁ 幾 至 聲色俱厲 ﹂ ， 甚至|有意無意|地 顯示出 腰 間 藏有 凶器 ！ 譚云 ：﹁ 自古 非|文武北洋|2005|D",
         "軍政 重心 似 均 集中 於 此 ， 荊州 當然|有意無意|地 被 忽略 了 ， 關公 一 人 ， 孤懸千山萬水|從關羽到關帝|2006|D",
         "， 可惜 不 知 是 作者 有 偏見 ， 或|有意無意|回避 ， 所以 關公 的 神威 無法 出現 在 書|從關羽到關帝|2006|D",
-        "， 這些 秦王府 功臣 有意 誇大 自己 的 功勞 ，|有意無意|之中 把 房玄齡 等 人 收攬 人才 的 性質 向|孟憲實講唐史-從玄武門之變到貞觀之治|2008|VH",
-        "其實 ， 這 都 是 文學 暗示 ， 讓 你|有意無意|地 向 武則天 方向 思考 。 李義府 賣 官 ，|孟憲實講唐史-唐高宗的真相|2008|D",
-        "霸道 ， 就 常常 亮 著 自己 的 官職 ，|有意無意|地 打 著 太子 楊勇 的 旗號 。 旁人 的|曇花王朝|2015|D"
+        "， 這些 秦王府 功臣 有意 誇大 自己 的 功勞 ，|有意無意|之中 把 房玄齡 等 人 收攬 人才 的 性質 向|孟憲實講唐史|2008|VH",
+        "其實 ， 這 都 是 文學 暗示 ， 讓 你|有意無意|地 向 武則天 方向 思考 。 李義府 賣 官 ，|孟憲實講唐史|2008|D",
+        "霸道 ， 就 常常 亮 著 自己 的 官職 ，|有意無意|地 打 著 太子 楊勇 的 旗號 。 旁人 的|曇花王朝|2015|D",
+        "這 份 罪 是 上帝 的 懲罰 ， 那 個|有意無意|的 上帝 ， 不要 也罷 。 「 還 有 一|按牌理出牌|2000|VH",
+        "不 見 綠 葉 ， 但 聞 奇 香 ，|有意無意|， 憾 。 憾 得 不值 。 憾完 丟掉 ，|諸子百家看金庸|2005|VH",
+        "多 現代 女性 選擇 獨身 、 害怕 婚姻 ， 免得|有意無意|像 《 紅樓夢 》 中 的 賈迎春 錯配 中山 狼|給我金庸小說|2005|VH",
+        "客 老爺 要 上 朝廷 當 大官 ， 恕 小人|有意無意|， 一時 多多 冒犯 老爺 ！ 請 快快 接旨 去|中國歷代作家|2001|VH",
+        "荷珠 ： （ 當真 興奮 了 ） 我 真 是|有意無意|啊 ！ 您 一定 是 很 了不起 的 大人物 才|金士傑 劇本I|2002|VH",
+        "怎樣 感謝 你 才 好 。 我 簡直 是 個|有意無意|的 傻瓜 ！ 」 奧德菲 醫生 也 附和 道 。|赫丘勒的十二道任務|2002|VH",
+        "就 在 劉表 身旁 ， 劉表 也 不能 發掘 。|有意無意|的 蠢 才 ， 一旦 手 握 權力 ， 都|柏楊品三國|2007|VH",
+        "是 和 闐玉 的 璞石 ， 可惜 現有 的 主人|有意無意|， 不 知道 其 價值 而已 。 米亮 這 番|取法富豪|2012|VH",
+        "「 這 個 相面 的 真 糊塗 ， 真 是|有意無意|， 把 我 這 個 皇帝 看做 乞丐 ， 你|台灣民間故事集|2011|VH",
+        "知道 這 事 後 ， 都 說 莎里三 的 父母|有意無意|， 把 一 朵 鮮花 插 到 牛屎 上去 了|廣西民間故事集|2011|VH"
     ];
 
     let currentMode = 'kwic';
@@ -836,9 +1000,9 @@
     let totalCorpusWords = 0;
     let currentCollocResults = [];
 
-    // 初始化：運算整個微型語料庫的總字數與詞頻 (給 Log-likelihood 統計用)
+    // 初始化統計全域詞頻
     function initCorpusStats() {
-        compressedData.forEach(row => {
+        rawCorpusData.forEach(row => {
             const parts = row.split('|');
             if (parts.length === 6) {
                 const words = [...getCleanWordsArray(parts[0]), parts[1], ...getCleanWordsArray(parts[2])];
@@ -850,7 +1014,6 @@
         });
     }
 
-    // 清理引號空白與轉換全形
     function cleanText(text) {
         return text.replace(/﹁/g, "「").replace(/﹂/g, "」")
                    .replace(/『/g, "『").replace(/』/g, "』")
@@ -858,7 +1021,6 @@
                    .replace(/『\s+/g, "『").replace(/\s+』/g, "』");
     }
 
-    // 將字串拆分並過濾標點符號
     function getCleanWordsArray(text) {
         return text.split(/\s+/).filter(w => {
             const cleanWord = w.replace(/[。，、；：「」『』（）？！《》〈〉]/g, '').trim();
@@ -878,16 +1040,19 @@
         
         if(mode === 'kwic') {
             renderKwicTable();
-        } else {
-            document.getElementById("collocBody").innerHTML = `<tr><td colspan="4" class="empty-message">請點擊「計算排名」來生成搭配詞統計。</td></tr>`;
         }
     }
 
     function handleIdiomChange() {
-        if(currentMode === 'kwic') renderKwicTable();
-        else document.getElementById("collocBody").innerHTML = `<tr><td colspan="4" class="empty-message">已更改成語，請重新點擊「計算排名」。</td></tr>`;
+        if(currentMode === 'kwic') {
+            renderKwicTable();
+        } else {
+            document.getElementById("collocBody").innerHTML = `<tr><td colspan="4" class="empty-message">已更改成語，請重新點擊「Apply / Calculate」。</td></tr>`;
+            document.getElementById("collocStatsDisplay").innerHTML = "";
+        }
     }
 
+    // 渲染 KWIC
     function renderKwicTable() {
         const selectedIdiom = document.getElementById("idiomSelect").value;
         const tbody = document.getElementById("corpusBody");
@@ -895,25 +1060,25 @@
         tbody.innerHTML = "";
 
         let matchCount = 0;
-        compressedData.forEach((row) => {
+        rawCorpusData.forEach((row) => {
             const parts = row.split('|');
             if (parts.length === 6) {
-                const left = cleanText(parts[0]);
                 const keyword = parts[1];
-                const right = cleanText(parts[2]);
-                const book = parts[3];
-                const year = parts[4];
-                const pos = parts[5];
-
                 if (selectedIdiom === "all" || keyword === selectedIdiom) {
                     matchCount++;
-                    const posInfo = posDescriptions[pos] || `[ ${pos} ] 未知詞類`;
+                    const left = cleanText(parts[0]);
+                    const right = cleanText(parts[2]);
+                    const book = parts[3];
+                    const year = parts[4];
+                    const posInfo = posDescriptions[parts[5]] || `[ ${parts[5]} ] 未知詞類`;
+                    
                     const tr = document.createElement("tr");
                     tr.innerHTML = `
                         <td class="col-id">${matchCount}</td>
                         <td class="col-left">${left}</td>
                         <td class="col-keyword">
-                            <div class="keyword-container">${keyword}<span class="tooltip">${posInfo}</span></div>
+                            ${keyword}
+                            <span class="tooltip">${posInfo}</span>
                         </td>
                         <td class="col-right">${right}</td>
                         <td class="col-book">${book}</td>
@@ -928,12 +1093,18 @@
             tbody.innerHTML = `<tr><td colspan="6" class="empty-message">沒有符合條件的語料資料。</td></tr>`;
             statsDisplay.innerHTML = "";
         } else {
-            statsDisplay.innerHTML = `符合筆數：<strong>${matchCount}</strong> 筆`;
+            statsDisplay.innerHTML = `符合筆數：${matchCount} 筆`;
         }
     }
 
+    // 計算搭配詞 (含 Log-Likelihood)
     function calculateCollocation() {
         const selectedIdiom = document.getElementById("idiomSelect").value;
+        if(selectedIdiom === "all") {
+            alert("搭配詞運算請先選擇特定的目標成語！");
+            return;
+        }
+
         const leftWin = parseInt(document.getElementById("leftWindow").value);
         const rightWin = parseInt(document.getElementById("rightWindow").value);
         const minFreq = parseInt(document.getElementById("minFreq").value);
@@ -942,7 +1113,7 @@
         let sentencesWithCollocate = {}; 
         let nodeFreq = 0;
 
-        compressedData.forEach(row => {
+        rawCorpusData.forEach(row => {
             const parts = row.split('|');
             if (parts.length === 6 && parts[1] === selectedIdiom) {
                 nodeFreq++;
@@ -966,8 +1137,8 @@
         for (const word in windowWordCounts) {
             const O11 = windowWordCounts[word]; // 共同出現次數
             if (O11 >= minFreq) {
-                const C_colloc = globalWordFreq[word] || O11; // 該搭配詞在整體語料庫的總頻率
-                const C_node = nodeFreq; // 該成語的總頻率
+                const C_colloc = globalWordFreq[word] || O11; 
+                const C_node = nodeFreq; 
                 const N = totalCorpusWords;
 
                 // Log-likelihood 計算公式
@@ -990,14 +1161,18 @@
                 results.push({
                     word: word,
                     obsFreq: O11,
-                    ll: LL.toFixed(2),
+                    ll: LL.toFixed(3),
                     sentences: sentencesWithCollocate[word]
                 });
             }
         }
 
-        // 根據 Log-likelihood 分數降冪排序
+        // 依 Log-likelihood 分數降冪排序
         currentCollocResults = results.sort((a, b) => b.ll - a.ll); 
+        
+        document.getElementById("collocStatsDisplay").innerHTML = 
+            `There are ${results.length} different word types in the collocation database for this query (Query "${selectedIdiom}" returned ${nodeFreq} matches).`;
+        
         renderCollocTable(currentCollocResults);
     }
 
@@ -1006,7 +1181,7 @@
         tbody.innerHTML = "";
 
         if (results.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" class="empty-message">在目前設定下，找不到頻率達標的搭配詞。<br>建議降低 "Freq at least" 數值，或擴大 Collocation window。</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" class="empty-message">找不到頻率達標的搭配詞。<br>建議降低 "Freq at least" 數值。</td></tr>`;
             return;
         }
 
@@ -1022,7 +1197,7 @@
         });
     }
 
-    // Modal 邏輯
+    // Modal 例句邏輯
     function openModal(index) {
         const item = currentCollocResults[index];
         document.getElementById('modalTitle').innerText = `搭配詞「${item.word}」共現例句 (${item.obsFreq} 筆)`;
@@ -1035,7 +1210,6 @@
             let right = cleanText(parts[2]);
             const kw = parts[1];
 
-            // 將搭配詞加上黃底紅字的高亮標示
             const regex = new RegExp(`(${item.word})`, 'g');
             const highlightHtml = `<span class="highlight-colloc">$1</span>`;
             left = left.replace(regex, highlightHtml);
@@ -1054,15 +1228,13 @@
 
     function closeModal() { document.getElementById('sentenceModal').style.display = 'none'; }
 
-    // 點擊 Modal 背景時關閉視窗
     window.onclick = function(event) {
         if (event.target == document.getElementById('sentenceModal')) closeModal();
     }
 
-    // 初始載入
     window.onload = () => {
-        initCorpusStats(); // 載入時先統計語料庫全域狀態
-        switchView('colloc'); // 預設展示搭配詞畫面
+        initCorpusStats();
+        switchView('kwic');
     };
 </script>
 
